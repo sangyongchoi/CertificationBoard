@@ -58,4 +58,80 @@ class MemberControllerTest {
                 .andExpect(jsonPath("$.id").value(member.getId()));
     }
 
+    @Test
+    @DisplayName("validation 실패 테스트 - id가 null일 때")
+    public void validation_fail_when_id_null() throws Exception {
+        // given
+        MemberRequest member = new MemberRequest(null, "csytest", "csytest");
+        given(memberService.signUp(any())).willReturn(member.getId());
+
+        // when
+        mockMvc
+                .perform(post("/signup")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(member))
+                )
+                .andDo(print())
+                //then
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    @DisplayName("validation 실패 테스트 - id가 빈값 일 때")
+    public void validation_fail_when_id_empty() throws Exception {
+        // given
+        MemberRequest member = new MemberRequest("", "csytest", "csytest");
+        given(memberService.signUp(any())).willReturn(member.getId());
+
+        // when
+        mockMvc
+                .perform(post("/signup")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(member))
+                )
+                .andDo(print())
+                //then
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    @DisplayName("validation 실패 테스트 - password가 null일 때")
+    public void validation_fail_when_password_null() throws Exception {
+        // given
+        MemberRequest member = new MemberRequest("", null, "csytest");
+        given(memberService.signUp(any())).willReturn(member.getId());
+
+        // when
+        mockMvc
+                .perform(post("/signup")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(member))
+                )
+                .andDo(print())
+                //then
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    @DisplayName("validation 실패 테스트 - password가 빈값일 때")
+    public void validation_fail_when_password_empty() throws Exception {
+        // given
+        MemberRequest member = new MemberRequest("", "", "csytest");
+        given(memberService.signUp(any())).willReturn(member.getId());
+
+        // when
+        mockMvc
+                .perform(post("/signup")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(member))
+                )
+                .andDo(print())
+                //then
+                .andExpect(status().isBadRequest());
+    }
+
 }
