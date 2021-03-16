@@ -42,7 +42,7 @@ class MemberControllerTest {
     @DisplayName("회원가입 정상 테스트")
     public void signup() throws Exception {
         // given
-        MemberRequest member = new MemberRequest("csytest", "csytest", "csytest");
+        MemberRequest member = new MemberRequest("csytest11111", "csytest111111", "csytest");
         given(memberService.signUp(any())).willReturn(member.getId());
 
         // when
@@ -63,6 +63,25 @@ class MemberControllerTest {
     public void validation_fail_when_id_null() throws Exception {
         // given
         MemberRequest member = new MemberRequest(null, "csytest", "csytest");
+        given(memberService.signUp(any())).willReturn(member.getId());
+
+        // when
+        mockMvc
+                .perform(post("/signup")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(member))
+                )
+                .andDo(print())
+                //then
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    @DisplayName("validation 실패 테스트 - id가 8글자 미만 일 때")
+    public void validation_fail_when_less_than_min() throws Exception {
+        // given
+        MemberRequest member = new MemberRequest("csytest", "csytest123", "csytest");
         given(memberService.signUp(any())).willReturn(member.getId());
 
         // when
@@ -120,6 +139,25 @@ class MemberControllerTest {
     public void validation_fail_when_password_empty() throws Exception {
         // given
         MemberRequest member = new MemberRequest("", "", "csytest");
+        given(memberService.signUp(any())).willReturn(member.getId());
+
+        // when
+        mockMvc
+                .perform(post("/signup")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(member))
+                )
+                .andDo(print())
+                //then
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    @DisplayName("validation 실패 테스트 - password가 8글자 미만일 때")
+    public void validation_fail_when_password_less_than_min() throws Exception {
+        // given
+        MemberRequest member = new MemberRequest("csytest11", "csytest", "csytest");
         given(memberService.signUp(any())).willReturn(member.getId());
 
         // when
