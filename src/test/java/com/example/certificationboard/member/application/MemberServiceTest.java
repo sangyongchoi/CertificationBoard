@@ -32,7 +32,7 @@ class MemberServiceTest {
     public void signup_when_success() {
         // given
         String userId = "test";
-        Member member = new Member(userId, "test", "test");
+        Member member = new Member(userId, "test", "test", false);
 
         // when
         String savedUserId = memberService.signUp(member);
@@ -49,7 +49,7 @@ class MemberServiceTest {
             // given
             String userId = "signup";
             insertUser(userId);
-            Member member = new Member(userId, "test", "test");
+            Member member = new Member(userId, "test", "test", false);
 
             // when
             memberService.signUp(member);
@@ -62,7 +62,7 @@ class MemberServiceTest {
         // given
         final String userId = "test1";
         insertUser(userId);
-        Member member = new Member(userId, "test", "test");
+        Member member = new Member(userId, "test", "test", false);
 
         // when
         boolean isExists = memberService.isExistsMember(member);
@@ -75,7 +75,7 @@ class MemberServiceTest {
     @DisplayName("중복 ID 테스트 - 존재하지 않을 때")
     public void duplicate_user_when_not_exists() {
         // given
-        Member member1 = new Member("test2", "test", "test");
+        Member member1 = new Member("test2", "test", "test", false);
 
         // when
         boolean isExists = memberService.isExistsMember(member1);
@@ -85,7 +85,7 @@ class MemberServiceTest {
     }
 
     void insertUser(String userId){
-        Member member1 = new Member(userId, "test", "test");
+        Member member1 = new Member(userId, "test", "test", false);
         memberRepository.save(member1);
         memberRepository.flush();
     }

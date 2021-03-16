@@ -31,6 +31,6 @@ public class MemberRequest {
     }
 
     public Member toMemberEntity() {
-        return new Member(this.id, this.password, this.name);
+        return new Member(this.id, this.password, this.name, false);
     }
 }
