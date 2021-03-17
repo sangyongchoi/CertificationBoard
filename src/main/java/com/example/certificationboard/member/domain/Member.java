@@ -27,4 +27,16 @@ public class Member extends BaseTimeEntity {
     public String getId() {
         return id;
     }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public Boolean getVerified() {
+        return isVerified;
+    }
 }

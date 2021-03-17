@@ -36,14 +36,15 @@ class MemberControllerTest {
     @BeforeEach
     void beforeSetup(){
         objectMapper = new ObjectMapper();
+        MemberRequest member = new MemberRequest("csytest11", "csytest", "csytest");
+        given(memberService.signUp(any())).willReturn(member.toMemberEntity());
     }
 
     @Test
     @DisplayName("회원가입 정상 테스트")
     public void signup() throws Exception {
         // given
-        MemberRequest member = new MemberRequest("csytest11111", "csytest111111", "csytest");
-        given(memberService.signUp(any())).willReturn(member.getId());
+        MemberRequest member = new MemberRequest("csytest11", "csytest111111", "csytest");
 
         // when
         mockMvc
@@ -64,7 +65,6 @@ class MemberControllerTest {
     public void validation_fail_when_id_null() throws Exception {
         // given
         MemberRequest member = new MemberRequest(null, "csytest", "csytest");
-        given(memberService.signUp(any())).willReturn(member.getId());
 
         // when
         mockMvc
@@ -84,7 +84,6 @@ class MemberControllerTest {
     public void validation_fail_when_less_than_min() throws Exception {
         // given
         MemberRequest member = new MemberRequest("csytest", "csytest123", "csytest");
-        given(memberService.signUp(any())).willReturn(member.getId());
 
         // when
         mockMvc
@@ -104,7 +103,6 @@ class MemberControllerTest {
     public void validation_fail_when_id_empty() throws Exception {
         // given
         MemberRequest member = new MemberRequest("", "csytest", "csytest");
-        given(memberService.signUp(any())).willReturn(member.getId());
 
         // when
         mockMvc
@@ -124,7 +122,6 @@ class MemberControllerTest {
     public void validation_fail_when_password_null() throws Exception {
         // given
         MemberRequest member = new MemberRequest("", null, "csytest");
-        given(memberService.signUp(any())).willReturn(member.getId());
 
         // when
         mockMvc
@@ -144,7 +141,6 @@ class MemberControllerTest {
     public void validation_fail_when_password_empty() throws Exception {
         // given
         MemberRequest member = new MemberRequest("", "", "csytest");
-        given(memberService.signUp(any())).willReturn(member.getId());
 
         // when
         mockMvc
@@ -164,7 +160,6 @@ class MemberControllerTest {
     public void validation_fail_when_password_less_than_min() throws Exception {
         // given
         MemberRequest member = new MemberRequest("csytest11", "csytest", "csytest");
-        given(memberService.signUp(any())).willReturn(member.getId());
 
         // when
         mockMvc

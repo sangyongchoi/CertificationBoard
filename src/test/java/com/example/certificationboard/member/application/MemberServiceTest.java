@@ -9,6 +9,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -24,7 +26,8 @@ class MemberServiceTest {
 
     @BeforeEach
     void setup(){
-        memberService = new MemberService(memberRepository);
+        PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+        memberService = new MemberService(memberRepository, passwordEncoder);
     }
 
     @Test
@@ -35,8 +38,8 @@ class MemberServiceTest {
         Member member = new Member(userId, "test", "test", false);
 
         // when
-        String savedUserId = memberService.signUp(member);
-
+        Member savedUser = memberService.signUp(member);
+        String savedUserId = savedUser.getId();
         // then
         assertEquals(userId, savedUserId);
     }
@@ -82,6 +85,16 @@ class MemberServiceTest {
 
         // then
         assertFalse(isExists);
+    }
+
+    @Test
+    @DisplayName("비밀번호 암호화 테스트")
+    public void password_crypt_success() {
+        // given
+        Member member = new Member("csytest1", "csytest1", "1111", false);
+        // when
+        //Member cryptMember = memberService.encrytePassword(member);
+        //then
     }
 
     void insertUser(String userId){
