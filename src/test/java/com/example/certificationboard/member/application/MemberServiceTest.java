@@ -24,14 +24,22 @@ class MemberServiceTest {
 
     MemberService memberService;
 
+    PasswordEncoder passwordEncoder;
+
     @BeforeEach
     void setup(){
-        PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+        passwordEncoder = new BCryptPasswordEncoder();
         memberService = new MemberService(memberRepository, passwordEncoder);
     }
 
+    void insertUser(String userId){
+        Member member1 = new Member(userId, "test", "test", false);
+        memberRepository.save(member1);
+        memberRepository.flush();
+    }
+
     @Test
-    @DisplayName("회원가입 테스트 - 성공")
+    @DisplayName("회원가입 테스트 - 성공 (비밀번호 암호화)")
     public void signup_when_success() {
         // given
         String userId = "test";
@@ -42,6 +50,7 @@ class MemberServiceTest {
         String savedUserId = savedUser.getId();
         // then
         assertEquals(userId, savedUserId);
+        assertTrue(passwordEncoder.matches(member.getPassword(), savedUser.getPassword()));
     }
 
     @Test
@@ -87,19 +96,4 @@ class MemberServiceTest {
         assertFalse(isExists);
     }
 
-    @Test
-    @DisplayName("비밀번호 암호화 테스트")
-    public void password_crypt_success() {
-        // given
-        Member member = new Member("csytest1", "csytest1", "1111", false);
-        // when
-        //Member cryptMember = memberService.encrytePassword(member);
-        //then
-    }
-
-    void insertUser(String userId){
-        Member member1 = new Member(userId, "test", "test", false);
-        memberRepository.save(member1);
-        memberRepository.flush();
-    }
 }
