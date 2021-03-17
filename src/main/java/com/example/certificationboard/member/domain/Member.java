@@ -12,16 +12,16 @@ public class Member extends BaseTimeEntity {
     private String id;
     private String password;
     private String name;
-    private Boolean isCertified;
+    private Boolean isVerified;
 
     public Member() {
     }
 
-    public Member(String id, String password, String name, Boolean isCertified) {
+    public Member(String id, String password, String name, Boolean isVerified) {
         this.id = id;
         this.password = password;
         this.name = name;
-        this.isCertified = isCertified;
+        this.isVerified = isVerified;
     }
 
     public String getId() {

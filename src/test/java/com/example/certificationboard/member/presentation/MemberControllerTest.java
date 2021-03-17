@@ -2,7 +2,6 @@ package com.example.certificationboard.member.presentation;
 
 import com.example.certificationboard.member.application.MemberRequest;
 import com.example.certificationboard.member.application.MemberService;
-import com.example.certificationboard.member.domain.Member;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -16,6 +15,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -51,6 +51,7 @@ class MemberControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(member))
+                        .with(csrf())
                 )
                 .andDo(print())
         //then
@@ -71,6 +72,7 @@ class MemberControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(member))
+                        .with(csrf())
                 )
                 .andDo(print())
                 //then
@@ -90,6 +92,7 @@ class MemberControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(member))
+                        .with(csrf())
                 )
                 .andDo(print())
                 //then
@@ -109,6 +112,7 @@ class MemberControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(member))
+                        .with(csrf())
                 )
                 .andDo(print())
                 //then
@@ -128,6 +132,7 @@ class MemberControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(member))
+                        .with(csrf())
                 )
                 .andDo(print())
                 //then
@@ -147,6 +152,7 @@ class MemberControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(member))
+                        .with(csrf())
                 )
                 .andDo(print())
                 //then
@@ -166,6 +172,7 @@ class MemberControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(member))
+                        .with(csrf())
                 )
                 .andDo(print())
                 //then
