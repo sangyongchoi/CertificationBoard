@@ -15,6 +15,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
+        http
+                .cors().disable()
+                .formLogin()
+                .permitAll();
+
         final ExpressionUrlAuthorizationConfigurer<HttpSecurity>.ExpressionInterceptUrlRegistry expressionInterceptUrlRegistry = http.authorizeRequests();
         expressionInterceptUrlRegistry.antMatchers("/signup").permitAll();
     }
