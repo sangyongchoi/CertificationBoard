@@ -2,6 +2,7 @@ package com.example.certificationboard.security.authentication;
 
 import com.example.certificationboard.member.domain.Member;
 import com.example.certificationboard.member.domain.MemberRepository;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -25,6 +26,7 @@ public class UserDetailService implements UserDetailsService {
         return User.builder()
                 .username(member.getId())
                 .password(member.getPassword())
+                .authorities(new SimpleGrantedAuthority("USER"))
                 .build();
     }
 }
