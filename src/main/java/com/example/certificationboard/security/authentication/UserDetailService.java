@@ -26,7 +26,7 @@ public class UserDetailService implements UserDetailsService {
         return User.builder()
                 .username(member.getId())
                 .password(member.getPassword())
-                .authorities(new SimpleGrantedAuthority("USER"))
+                .authorities(new SimpleGrantedAuthority(member.getRole().name()))
                 .build();
     }
 }

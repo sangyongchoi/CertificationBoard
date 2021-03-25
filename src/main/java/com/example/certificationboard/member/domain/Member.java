@@ -3,6 +3,8 @@ package com.example.certificationboard.member.domain;
 import com.example.certificationboard.common.BaseTimeEntity;
 
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.Id;
 
 @Entity
@@ -13,6 +15,8 @@ public class Member extends BaseTimeEntity {
     private String password;
     private String name;
     private Boolean isVerified;
+    @Enumerated(EnumType.STRING)
+    private Role role;
 
     public Member() {
     }
@@ -22,6 +26,7 @@ public class Member extends BaseTimeEntity {
         this.password = password;
         this.name = name;
         this.isVerified = isVerified;
+        this.role = Role.ROLE_MEMBER;
     }
 
     public String getId() {
@@ -38,5 +43,9 @@ public class Member extends BaseTimeEntity {
 
     public Boolean getVerified() {
         return isVerified;
+    }
+
+    public Role getRole() {
+        return role;
     }
 }
