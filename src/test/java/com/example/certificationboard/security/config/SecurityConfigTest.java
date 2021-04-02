@@ -15,7 +15,6 @@ import org.springframework.web.context.WebApplicationContext;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestBuilders.formLogin;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
@@ -53,8 +52,7 @@ class SecurityConfigTest {
         // when
         mvc.perform(formLogin().user(userId).password(password))
                 .andDo(print())
-        // then
-                .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/"));
+                // then
+                .andExpect(status().isOk());
     }
 }
