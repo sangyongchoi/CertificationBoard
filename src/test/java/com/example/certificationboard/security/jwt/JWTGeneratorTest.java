@@ -10,7 +10,7 @@ import java.time.Month;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-class JwtGeneratorTest {
+class JWTGeneratorTest {
 
     @Test
     @DisplayName("JWT 생성 테스트")
