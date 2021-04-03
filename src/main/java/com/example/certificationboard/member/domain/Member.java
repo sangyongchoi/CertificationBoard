@@ -1,14 +1,28 @@
 package com.example.certificationboard.member.domain;
 
 import com.example.certificationboard.common.BaseTimeEntity;
+import com.example.certificationboard.common.util.DateUtil;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.NoArgsConstructor;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.Id;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.UUID;
 
 @Entity
-public class Member extends BaseTimeEntity {
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+public class Member extends BaseTimeEntity implements UserDetails {
 
     @Id
     private String id;
@@ -17,9 +31,7 @@ public class Member extends BaseTimeEntity {
     private Boolean isVerified;
     @Enumerated(EnumType.STRING)
     private Role role;
-
-    public Member() {
-    }
+    private String organizationId;
 
     public Member(String id, String password, String name, Boolean isVerified) {
         this.id = id;
@@ -27,14 +39,11 @@ public class Member extends BaseTimeEntity {
         this.name = name;
         this.isVerified = isVerified;
         this.role = Role.ROLE_MEMBER;
+        this.organizationId = UUID.randomUUID() + DateUtil.nowToString();
     }
 
     public String getId() {
         return id;
-    }
-
-    public String getPassword() {
-        return password;
     }
 
     public String getName() {
@@ -45,7 +54,46 @@ public class Member extends BaseTimeEntity {
         return isVerified;
     }
 
-    public Role getRole() {
-        return role;
+    public String getOrganizationId() {
+        return organizationId;
     }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        List<SimpleGrantedAuthority> roles = new ArrayList<>();
+        roles.add(new SimpleGrantedAuthority(role.name()));
+
+        return roles;
+    }
+
+    @Override
+    public String getPassword() {
+        return password;
+    }
+
+    @Override
+    public String getUsername() {
+        return id;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
+    }
+
 }

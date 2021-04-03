@@ -1,9 +1,6 @@
 package com.example.certificationboard.security.authentication;
 
-import com.example.certificationboard.member.domain.Member;
 import com.example.certificationboard.member.domain.MemberRepository;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -20,13 +17,7 @@ public class UserDetailService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String id) throws UsernameNotFoundException {
-        final Member member = memberRepository.findById(id)
+        return memberRepository.findById(id)
                 .orElseThrow(() -> new UsernameNotFoundException("존재하지 않는 유저입니다."));
-
-        return User.builder()
-                .username(member.getId())
-                .password(member.getPassword())
-                .authorities(new SimpleGrantedAuthority(member.getRole().name()))
-                .build();
     }
 }
