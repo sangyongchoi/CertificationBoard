@@ -15,6 +15,9 @@ spring:
     hibernate:
       ddl-auto: create
       format_sql: true
+  output:
+    ansi:
+      enabled: always
   mail:
     host: smtp.gmail.com
     port: 587
@@ -26,3 +29,6 @@ spring:
           auth: true
           starttls:
             enable: true
+logging:
+  level:
+    logging.level.org.hibernate.type: trace

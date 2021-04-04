@@ -1,9 +1,11 @@
 package com.example.certificationboard.member.application;
 
 import com.example.certificationboard.member.domain.Member;
+import lombok.Getter;
 
 import javax.validation.constraints.Size;
 
+@Getter
 public class MemberRequest {
 
     @Size(min = 8)
@@ -16,18 +18,6 @@ public class MemberRequest {
         this.id = id;
         this.password = password;
         this.name = name;
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public String getName() {
-        return name;
     }
 
     public Member toMemberEntity() {

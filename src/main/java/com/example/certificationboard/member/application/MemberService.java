@@ -19,6 +19,11 @@ public class MemberService {
         this.passwordEncoder = passwordEncoder;
     }
 
+    public Member findMemberById(String id) {
+        return memberRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저입니다."));
+    }
+
     public Member signUp(Member member) {
         if (isExistsMember(member)) {
             throw new DuplicateUserException(DUPLICATED_USER_ID);

@@ -5,6 +5,7 @@ import com.example.certificationboard.security.handler.LoginAuthHandler;
 import com.example.certificationboard.security.jwt.JWTGenerator;
 import com.example.certificationboard.security.matcher.SkipPathRequestMatcher;
 import com.example.certificationboard.security.provider.JWTAuthenticationProvider;
+import com.example.certificationboard.security.provider.LoginAuthenticationProvider;
 import org.apache.commons.lang3.ArrayUtils;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -17,6 +18,9 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.Arrays;
 
@@ -29,7 +33,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
-                .cors().disable()
+                .cors()
+                .and()
                 .csrf().disable()
                 .formLogin()
                     .successHandler(loginAuthHandler())
@@ -47,7 +52,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        super.configure(auth);
+        auth.authenticationProvider(loginAuthenticationProvider());
         auth.authenticationProvider(jwtAuthenticationProvider());
     }
 
@@ -69,6 +74,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         return new LoginAuthHandler(jwtGenerator());
     }
 
+    @Bean
+    public LoginAuthenticationProvider loginAuthenticationProvider() {
+        return new LoginAuthenticationProvider(passwordEncoder());
+    }
+
+    @Bean
     public JWTAuthenticationProvider jwtAuthenticationProvider() {
         return new JWTAuthenticationProvider(jwtGenerator());
     }
@@ -77,6 +88,21 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     public JWTGenerator jwtGenerator(){
         return new JWTGenerator();
     }
+
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+
+        configuration.addAllowedOrigin("http://localhost:3000");
+        configuration.addAllowedHeader("*");
+        configuration.addAllowedMethod("*");
+        configuration.setAllowCredentials(true);
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
+    }
+
 
     private static <T> T[] addAll(T[] firstArr, T[]... concatArgs) {
         T[] concatArr = firstArr;
