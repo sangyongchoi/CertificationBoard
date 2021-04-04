@@ -2,7 +2,6 @@ package com.example.certificationboard.security.config;
 
 import com.example.certificationboard.security.filter.JWTFilter;
 import com.example.certificationboard.security.handler.LoginAuthHandler;
-import com.example.certificationboard.security.jwt.JWTGenerator;
 import com.example.certificationboard.security.matcher.SkipPathRequestMatcher;
 import com.example.certificationboard.security.provider.JWTAuthenticationProvider;
 import com.example.certificationboard.security.provider.LoginAuthenticationProvider;
@@ -15,8 +14,6 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.annotation.web.configurers.ExpressionUrlAuthorizationConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
@@ -29,6 +26,15 @@ import java.util.Arrays;
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     public static final String[] PUBLIC_URLS = {"/", "/signup", "/login"};
+    private final LoginAuthenticationProvider loginAuthenticationProvider;
+    private final JWTAuthenticationProvider jwtAuthenticationProvider;
+    private final LoginAuthHandler loginAuthHandler;
+
+    public SecurityConfig(LoginAuthenticationProvider loginAuthenticationProvider, JWTAuthenticationProvider jwtAuthenticationProvider, LoginAuthHandler loginAuthHandler) {
+        this.loginAuthenticationProvider = loginAuthenticationProvider;
+        this.jwtAuthenticationProvider = jwtAuthenticationProvider;
+        this.loginAuthHandler = loginAuthHandler;
+    }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -37,7 +43,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .csrf().disable()
                 .formLogin()
-                    .successHandler(loginAuthHandler())
+                    .successHandler(loginAuthHandler)
                     .permitAll()
                 .and()
                     .sessionManagement()
@@ -52,8 +58,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.authenticationProvider(loginAuthenticationProvider());
-        auth.authenticationProvider(jwtAuthenticationProvider());
+        auth.authenticationProvider(loginAuthenticationProvider);
+        auth.authenticationProvider(jwtAuthenticationProvider);
     }
 
     public JWTFilter jwtFilter() throws Exception {
@@ -64,30 +70,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         return jwtFilter;
     }
 
-    @Bean
-    public PasswordEncoder passwordEncoder(){
-        return new BCryptPasswordEncoder();
-    }
 
-    @Bean
-    public LoginAuthHandler loginAuthHandler() {
-        return new LoginAuthHandler(jwtGenerator());
-    }
-
-    @Bean
-    public LoginAuthenticationProvider loginAuthenticationProvider() {
-        return new LoginAuthenticationProvider(passwordEncoder());
-    }
-
-    @Bean
-    public JWTAuthenticationProvider jwtAuthenticationProvider() {
-        return new JWTAuthenticationProvider(jwtGenerator());
-    }
-
-    @Bean
-    public JWTGenerator jwtGenerator(){
-        return new JWTGenerator();
-    }
 
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
