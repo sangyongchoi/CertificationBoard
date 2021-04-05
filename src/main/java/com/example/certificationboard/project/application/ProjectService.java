@@ -3,6 +3,7 @@ package com.example.certificationboard.project.application;
 import com.example.certificationboard.member.domain.Member;
 import com.example.certificationboard.project.domain.*;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class ProjectService {
@@ -15,6 +16,7 @@ public class ProjectService {
         this.projectParticipantsRepository = projectParticipantsRepository;
     }
 
+    @Transactional
     public Long create(Project project, Member member) {
         final Project save = projectRepository.save(project);
         final ProjectParticipantsId projectParticipantsId = new ProjectParticipantsId(save, member);
