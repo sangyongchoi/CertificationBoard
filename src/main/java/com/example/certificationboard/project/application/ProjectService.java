@@ -9,11 +9,11 @@ import org.springframework.transaction.annotation.Transactional;
 public class ProjectService {
 
     private final ProjectRepository projectRepository;
-    private final ProjectParticipantsRepository projectParticipantsRepository;
+    private final ProjectParticipantsService projectParticipantsService;
 
-    public ProjectService(ProjectRepository projectRepository, ProjectParticipantsRepository projectParticipantsRepository) {
+    public ProjectService(ProjectRepository projectRepository, ProjectParticipantsService projectParticipantsService) {
         this.projectRepository = projectRepository;
-        this.projectParticipantsRepository = projectParticipantsRepository;
+        this.projectParticipantsService = projectParticipantsService;
     }
 
     @Transactional
@@ -22,7 +22,7 @@ public class ProjectService {
         final ProjectParticipantsId projectParticipantsId = new ProjectParticipantsId(save, member);
         final ProjectParticipants projectParticipants = new ProjectParticipants(projectParticipantsId, ProjectParticipants.Role.ADMIN);
 
-        projectParticipantsRepository.save(projectParticipants);
+        projectParticipantsService.join(projectParticipants);
 
         return save.getId();
     }

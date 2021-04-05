@@ -11,11 +11,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(SpringExtension.class)
 @DataJpaTest
-class ProjectServiceTest {
+class ProjectParticipantsServiceTest {
 
     @Autowired
     ProjectRepository projectRepository;
@@ -34,28 +34,30 @@ class ProjectServiceTest {
         projectParticipantsService = new ProjectParticipantsService(projectParticipantsRepository);
         projectService = new ProjectService(projectRepository, projectParticipantsService);
         final Member member = new Member("csytest1", "csytest1", "csytest1", false);
+        final Member member2 = new Member("csytest2", "csytest1", "csytest1", false);
         memberRepository.save(member);
+        memberRepository.save(member2);
+
+        final String userId = "csytest1";
+        ProjectCreateRequest projectCreateRequest = new ProjectCreateRequest(userId, "test", "test");
+        final Project project = projectCreateRequest.toProjectEntity(member);
+        Long id = projectService.create(project, member);
     }
 
     @Test
-    @DisplayName("프로젝트 생성 테스트")
-    public void create_project_test() {
+    @DisplayName("프로젝트 참여테스트")
+    public void project_participants_join_test() {
         // given
-        final String userId = "csytest1";
-        ProjectCreateRequest projectCreateRequest = new ProjectCreateRequest(userId, "test", "test");
-        final Member member = memberRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("잘못된 정보입니다."));
-        final Project project = projectCreateRequest.toProjectEntity(member);
+        final Project project = projectRepository.findById(1L).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 프로젝트입니다."));
+        final Member member = memberRepository.findById("csytest2").orElseThrow(() -> new IllegalArgumentException("잘못된 정보입니다."));
         final ProjectParticipantsId projectParticipantsId = new ProjectParticipantsId(project, member);
+        final ProjectParticipants projectParticipants = new ProjectParticipants(projectParticipantsId, ProjectParticipants.Role.MEMBER);
 
         // when
-        Long id = projectService.create(project, member);
-        final ProjectParticipants projectParticipants = projectParticipantsRepository.findById(projectParticipantsId)
-                .orElseThrow(() -> new IllegalArgumentException("잘못된 정보입니다"));
+        final ProjectParticipants join = projectParticipantsService.join(projectParticipants);
 
-        //then
-        assertEquals(1, id);
-        assertEquals(member.getId(), projectParticipants.getProjectParticipantsId().getMember().getId());
-        assertEquals(project.getId(), projectParticipants.getProjectParticipantsId().getProject().getId());
+        // then
+        assertEquals(projectParticipants.getProjectParticipantsId(), join.getProjectParticipantsId());
     }
 
 }
