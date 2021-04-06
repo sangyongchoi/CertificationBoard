@@ -1,6 +1,7 @@
 package com.example.certificationboard.project.domain;
 
 import com.example.certificationboard.common.BaseTimeEntity;
+import lombok.Getter;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -8,6 +9,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 @Entity
+@Getter
 public class Project extends BaseTimeEntity {
 
     @Id
@@ -26,9 +28,5 @@ public class Project extends BaseTimeEntity {
         this.createdMemberId = createdMemberId;
         this.title = title;
         this.explain = explain;
-    }
-
-    public Long getId() {
-        return id;
     }
 }

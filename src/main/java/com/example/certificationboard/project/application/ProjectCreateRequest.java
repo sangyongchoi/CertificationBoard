@@ -6,12 +6,16 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import javax.validation.constraints.NotEmpty;
+
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
 public class ProjectCreateRequest {
 
+    @NotEmpty
     private String userId;
+    @NotEmpty
     private String title;
     private String explain;
 
