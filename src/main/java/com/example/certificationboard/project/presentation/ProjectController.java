@@ -1,8 +1,11 @@
 package com.example.certificationboard.project.presentation;
 
 import com.example.certificationboard.member.application.MemberService;
+import com.example.certificationboard.member.domain.Member;
 import com.example.certificationboard.project.application.ProjectCreateRequest;
+import com.example.certificationboard.project.application.ProjectCreateResponse;
 import com.example.certificationboard.project.application.ProjectService;
+import com.example.certificationboard.project.domain.Project;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -19,8 +22,13 @@ public class ProjectController {
     }
 
     @PostMapping(value = "/project")
-    public Long createProject(@RequestBody ProjectCreateRequest projectCreateRequest) {
+    public ProjectCreateResponse createProject(@RequestBody ProjectCreateRequest projectCreateRequest) {
+        String userId = projectCreateRequest.getUserId();
+        final Member member = memberService.findMemberById(userId);
+        final Project project = projectCreateRequest.toProjectEntity(member);
 
-        return 1L;
+        final Long projectId = projectService.create(project, member);
+
+        return new ProjectCreateResponse(projectId);
     }
 }

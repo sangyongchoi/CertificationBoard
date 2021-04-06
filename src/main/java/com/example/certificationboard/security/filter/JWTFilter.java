@@ -18,7 +18,7 @@ import java.io.IOException;
 
 public class JWTFilter extends AbstractAuthenticationProcessingFilter {
 
-    private static final String AUTH_HEADER_NAME = "authorization";
+    public static final String AUTH_HEADER_NAME = "authorization";
 
     public JWTFilter(RequestMatcher requiresAuthenticationRequestMatcher) {
         super(requiresAuthenticationRequestMatcher);

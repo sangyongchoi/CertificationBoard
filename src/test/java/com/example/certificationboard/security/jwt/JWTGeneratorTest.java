@@ -12,6 +12,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class JWTGeneratorTest {
 
+
+
     @Test
     @DisplayName("JWT 생성 테스트")
     public void jwtTokenTest() {

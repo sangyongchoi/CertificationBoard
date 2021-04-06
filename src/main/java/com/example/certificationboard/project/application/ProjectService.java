@@ -18,12 +18,12 @@ public class ProjectService {
 
     @Transactional
     public Long create(Project project, Member member) {
-        final Project save = projectRepository.save(project);
-        final ProjectParticipantsId projectParticipantsId = new ProjectParticipantsId(save, member);
+        final Project createdProject = projectRepository.save(project);
+        final ProjectParticipantsId projectParticipantsId = new ProjectParticipantsId(createdProject, member);
         final ProjectParticipants projectParticipants = new ProjectParticipants(projectParticipantsId, ProjectParticipants.Role.ADMIN);
 
         projectParticipantsService.join(projectParticipants);
 
-        return save.getId();
+        return createdProject.getId();
     }
 }
