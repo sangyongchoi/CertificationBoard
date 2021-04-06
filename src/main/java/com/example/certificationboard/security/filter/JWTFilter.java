@@ -1,6 +1,8 @@
 package com.example.certificationboard.security.filter;
 
+import com.example.certificationboard.security.exception.JwtAuthenticationException;
 import com.example.certificationboard.security.jwt.JWTAuthenticationToken;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
@@ -16,6 +18,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+@Slf4j
 public class JWTFilter extends AbstractAuthenticationProcessingFilter {
 
     public static final String AUTH_HEADER_NAME = "authorization";
@@ -28,7 +31,7 @@ public class JWTFilter extends AbstractAuthenticationProcessingFilter {
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException, IOException, ServletException {
         final String jwt = request.getHeader(AUTH_HEADER_NAME);
         if (!StringUtils.hasLength(jwt)) {
-            return null;
+            throw new JwtAuthenticationException();
         }
 
         return getAuthenticationManager().authenticate(new JWTAuthenticationToken(jwt));
@@ -55,6 +58,7 @@ public class JWTFilter extends AbstractAuthenticationProcessingFilter {
                                               HttpServletResponse response, AuthenticationException failed)
             throws IOException, ServletException {
 
+        log.info("unsuccessfulAuthentication. uri : {}", request.getRequestURI(), failed);
         SecurityContextHolder.clearContext();
         getFailureHandler().onAuthenticationFailure(request, response, failed);
     }

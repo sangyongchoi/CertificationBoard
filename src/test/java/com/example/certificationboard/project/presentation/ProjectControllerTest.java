@@ -7,7 +7,9 @@ import com.example.certificationboard.member.domain.Member;
 import com.example.certificationboard.project.application.ProjectCreateRequest;
 import com.example.certificationboard.project.application.ProjectService;
 import com.example.certificationboard.project.domain.Project;
+import com.example.certificationboard.security.config.SecurityConfig;
 import com.example.certificationboard.security.filter.JWTFilter;
+import com.example.certificationboard.security.provider.JWTAuthenticationProvider;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -15,6 +17,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Import;
 import org.springframework.data.jpa.mapping.JpaMetamodelMappingContext;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
@@ -46,6 +49,7 @@ class ProjectControllerTest extends ControllerTest {
     void beforeSetup() {
         objectMapper = new ObjectMapper();
         String userId = "csytest1";
+        jwt = TestUtil.createToken();
         final Member member1 = new Member("csytest1", "csytest1", "test", false);
         given(memberService.findMemberById(userId)).willReturn(member1);
         given(projectService.create(any(Project.class), any(Member.class))).willReturn(1L);
@@ -70,5 +74,64 @@ class ProjectControllerTest extends ControllerTest {
                 //then
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.projectId").value(1L));
+    }
+
+    @Test
+    @DisplayName("토큰 누락 테스트")
+    public void jwt_omission_test() throws Exception {
+        // given
+        final ProjectCreateRequest projectCreateRequest = new ProjectCreateRequest("csytest1", "test", "test");
+
+        // when
+        mockMvc
+                .perform(post("/project")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(projectCreateRequest))
+                        .with(csrf())
+                )
+                .andDo(print())
+                //then
+                .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    @DisplayName("유저ID 누락 테스트")
+    public void userId_omission_test() throws Exception {
+        // given
+        final ProjectCreateRequest projectCreateRequest = new ProjectCreateRequest("", "test", "test");
+
+        // when
+        mockMvc
+                .perform(post("/project")
+                        .header(JWTFilter.AUTH_HEADER_NAME, jwt)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(projectCreateRequest))
+                        .with(csrf())
+                )
+                .andDo(print())
+                //then
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    @DisplayName("프로젝트 제목 누락 테스트")
+    public void project_title_omission_test() throws Exception {
+        // given
+        final ProjectCreateRequest projectCreateRequest = new ProjectCreateRequest("csytest1", "", "test");
+
+        // when
+        mockMvc
+                .perform(post("/project")
+                        .header(JWTFilter.AUTH_HEADER_NAME, jwt)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(projectCreateRequest))
+                        .with(csrf())
+                )
+                .andDo(print())
+                //then
+                .andExpect(status().isBadRequest());
     }
 }

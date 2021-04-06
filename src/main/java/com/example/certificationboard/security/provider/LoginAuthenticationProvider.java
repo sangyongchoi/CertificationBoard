@@ -1,22 +1,22 @@
 package com.example.certificationboard.security.provider;
 
-import com.example.certificationboard.security.authentication.UserDetailService;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 @Component
 public class LoginAuthenticationProvider implements AuthenticationProvider {
 
-    private final UserDetailService userDetailService;
+    private final UserDetailsService userDetailService;
 
     private final PasswordEncoder passwordEncoder;
 
-    public LoginAuthenticationProvider(UserDetailService userDetailService, PasswordEncoder passwordEncoder) {
+    public LoginAuthenticationProvider(UserDetailsService userDetailService, PasswordEncoder passwordEncoder) {
         this.userDetailService = userDetailService;
         this.passwordEncoder = passwordEncoder;
     }

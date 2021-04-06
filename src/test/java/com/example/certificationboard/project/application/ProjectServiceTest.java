@@ -12,6 +12,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @ExtendWith(SpringExtension.class)
 @DataJpaTest
@@ -53,7 +54,7 @@ class ProjectServiceTest {
                 .orElseThrow(() -> new IllegalArgumentException("잘못된 정보입니다"));
 
         //then
-        assertEquals(1, id);
+        assertNotNull(id);
         assertEquals(member.getId(), projectParticipants.getProjectParticipantsId().getMember().getId());
         assertEquals(project.getId(), projectParticipants.getProjectParticipantsId().getProject().getId());
     }

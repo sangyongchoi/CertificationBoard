@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
+
 @RestController
 public class ProjectController {
 
@@ -22,7 +24,7 @@ public class ProjectController {
     }
 
     @PostMapping(value = "/project")
-    public ProjectCreateResponse createProject(@RequestBody ProjectCreateRequest projectCreateRequest) {
+    public ProjectCreateResponse createProject(@RequestBody @Valid ProjectCreateRequest projectCreateRequest) {
         String userId = projectCreateRequest.getUserId();
         final Member member = memberService.findMemberById(userId);
         final Project project = projectCreateRequest.toProjectEntity(member);
