@@ -32,11 +32,11 @@ public class ProjectService {
         return createdProject.getId();
     }
 
-    public List<ProjectResponse> list(Pageable pageable) {
+    public List<ProjectDto> list(Pageable pageable) {
         final Page<Project> projectList = projectRepository.findAll(pageable);
 
         return projectList.stream()
-                .map(ProjectResponse::of)
+                .map(ProjectDto::of)
                 .collect(Collectors.toList());
     }
 }

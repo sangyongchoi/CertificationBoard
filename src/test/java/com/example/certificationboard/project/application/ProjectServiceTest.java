@@ -7,7 +7,6 @@ import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -88,7 +87,7 @@ class ProjectServiceTest {
         Pageable pageable = PageRequest.of(0, 20);
 
         // when
-        final List<ProjectResponse> list = projectService.list(pageable);
+        final List<ProjectDto> list = projectService.list(pageable);
 
         //then
         assertEquals(1, list.get(0).getId());
@@ -103,7 +102,7 @@ class ProjectServiceTest {
         Pageable pageable = PageRequest.of(1, 20);
 
         // when
-        final List<ProjectResponse> list = projectService.list(pageable);
+        final List<ProjectDto> list = projectService.list(pageable);
 
         //then
         assertEquals(21, list.get(0).getId());

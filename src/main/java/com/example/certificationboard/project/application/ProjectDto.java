@@ -2,12 +2,12 @@ package com.example.certificationboard.project.application;
 
 import com.example.certificationboard.project.domain.Project;
 
-public class ProjectResponse {
+public class ProjectDto {
     private Long id;
     private String title;
     private String explain;
 
-    public ProjectResponse(Long id, String title, String explain) {
+    public ProjectDto(Long id, String title, String explain) {
         this.id = id;
         this.title = title;
         this.explain = explain;
@@ -17,8 +17,8 @@ public class ProjectResponse {
         return id;
     }
 
-    public static ProjectResponse of(Project project) {
-        return new ProjectResponse(project.getId(), project.getTitle(), project.getExplain());
+    public static ProjectDto of(Project project) {
+        return new ProjectDto(project.getId(), project.getTitle(), project.getExplain());
     }
 
 }
