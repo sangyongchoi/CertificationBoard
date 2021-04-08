@@ -88,12 +88,11 @@ class ProjectServiceTest {
         Pageable pageable = PageRequest.of(0, 20);
 
         // when
-        final Page<Project> list = projectService.list(pageable);
-        final List<Project> content = list.getContent();
+        final List<ProjectResponse> list = projectService.list(pageable);
 
         //then
-        assertEquals(1, content.get(0).getId());
-        assertEquals(20, list.getSize());
+        assertEquals(1, list.get(0).getId());
+        assertEquals(20, list.size());
     }
 
     @Test
@@ -104,12 +103,11 @@ class ProjectServiceTest {
         Pageable pageable = PageRequest.of(1, 20);
 
         // when
-        final Page<Project> list = projectService.list(pageable);
-        final List<Project> content = list.getContent();
+        final List<ProjectResponse> list = projectService.list(pageable);
 
         //then
-        assertEquals(21, content.get(0).getId());
-        assertEquals(20, list.getSize());
+        assertEquals(21, list.get(0).getId());
+        assertEquals(20, list.size());
     }
 
 }

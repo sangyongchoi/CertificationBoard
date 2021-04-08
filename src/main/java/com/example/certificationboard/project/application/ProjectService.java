@@ -7,6 +7,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 public class ProjectService {
 
@@ -29,7 +32,11 @@ public class ProjectService {
         return createdProject.getId();
     }
 
-    public Page<Project> list(Pageable pageable) {
-        return projectRepository.findAll(pageable);
+    public List<ProjectResponse> list(Pageable pageable) {
+        final Page<Project> projectList = projectRepository.findAll(pageable);
+
+        return projectList.stream()
+                .map(ProjectResponse::of)
+                .collect(Collectors.toList());
     }
 }
