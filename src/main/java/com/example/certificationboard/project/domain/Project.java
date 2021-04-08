@@ -29,4 +29,15 @@ public class Project extends BaseTimeEntity {
         this.title = title;
         this.explain = explain;
     }
+
+    @Override
+    public String toString() {
+        return "Project{" +
+                "id=" + id +
+                ", organizationId='" + organizationId + '\'' +
+                ", createdMemberId='" + createdMemberId + '\'' +
+                ", title='" + title + '\'' +
+                ", explain='" + explain + '\'' +
+                '}';
+    }
 }

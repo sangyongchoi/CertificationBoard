@@ -2,6 +2,8 @@ package com.example.certificationboard.project.application;
 
 import com.example.certificationboard.member.domain.Member;
 import com.example.certificationboard.project.domain.*;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,5 +27,9 @@ public class ProjectService {
         projectParticipantsService.join(projectParticipants);
 
         return createdProject.getId();
+    }
+
+    public Page<Project> list(Pageable pageable) {
+        return projectRepository.findAll(pageable);
     }
 }
