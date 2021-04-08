@@ -19,10 +19,11 @@ import java.util.UUID;
 
 public class LoginAuthHandler implements AuthenticationSuccessHandler {
 
-    private final ObjectMapper objectMapper = new ObjectMapper();
+    private final ObjectMapper objectMapper;
     private final JWTGenerator jwtGenerator;
 
-    public LoginAuthHandler(JWTGenerator jwtGenerator) {
+    public LoginAuthHandler(ObjectMapper objectMapper, JWTGenerator jwtGenerator) {
+        this.objectMapper = objectMapper;
         this.jwtGenerator = jwtGenerator;
     }
 

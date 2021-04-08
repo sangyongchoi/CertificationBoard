@@ -3,22 +3,13 @@ package com.example.certificationboard.member.presentation;
 import com.example.certificationboard.ControllerTest;
 import com.example.certificationboard.member.application.MemberRequest;
 import com.example.certificationboard.member.application.MemberService;
-import com.example.certificationboard.security.config.SecurityConfig;
-import com.example.certificationboard.security.handler.LoginAuthHandler;
-import com.example.certificationboard.security.provider.JWTAuthenticationProvider;
-import com.example.certificationboard.security.provider.LoginAuthenticationProvider;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.FilterType;
-import org.springframework.context.annotation.Import;
 import org.springframework.data.jpa.mapping.JpaMetamodelMappingContext;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
@@ -41,11 +32,11 @@ class MemberControllerTest extends ControllerTest {
     @MockBean
     MemberService memberService;
 
+    @Autowired
     ObjectMapper objectMapper;
 
     @BeforeEach
     void beforeSetup() {
-        objectMapper = new ObjectMapper();
         MemberRequest member = new MemberRequest("csytest11", "csytest", "csytest");
         given(memberService.signUp(any())).willReturn(member.toMemberEntity());
     }

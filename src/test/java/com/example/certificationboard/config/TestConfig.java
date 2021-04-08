@@ -7,6 +7,7 @@ import com.example.certificationboard.security.handler.LoginAuthHandler;
 import com.example.certificationboard.security.jwt.JWTGenerator;
 import com.example.certificationboard.security.provider.JWTAuthenticationProvider;
 import com.example.certificationboard.security.provider.LoginAuthenticationProvider;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.data.domain.Example;
@@ -34,8 +35,8 @@ public class TestConfig {
     }
 
     @Bean
-    public LoginAuthHandler loginAuthHandler(JWTGenerator jwtGenerator) {
-        return new LoginAuthHandler(jwtGenerator);
+    public LoginAuthHandler loginAuthHandler(ObjectMapper objectMapper, JWTGenerator jwtGenerator) {
+        return new LoginAuthHandler(objectMapper, jwtGenerator);
     }
 
     @Bean
