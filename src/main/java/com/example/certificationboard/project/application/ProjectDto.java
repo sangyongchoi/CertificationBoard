@@ -17,6 +17,14 @@ public class ProjectDto {
         return id;
     }
 
+    public String getTitle() {
+        return title;
+    }
+
+    public String getExplain() {
+        return explain;
+    }
+
     public static ProjectDto of(Project project) {
         return new ProjectDto(project.getId(), project.getTitle(), project.getExplain());
     }

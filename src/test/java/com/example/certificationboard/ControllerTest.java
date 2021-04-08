@@ -19,6 +19,9 @@ public class ControllerTest {
     LoginAuthenticationProvider loginAuthenticationProvider;
 
     @Autowired
+    JWTGenerator jwtGenerator;
+
+    @Autowired
     JWTAuthenticationProvider jwtAuthenticationProvider;
 
     @Autowired
@@ -28,7 +31,6 @@ public class ControllerTest {
 
     @BeforeEach
     public void setup(){
-        JWTGenerator generator = new JWTGenerator();
         jwt = TestUtil.createToken();
     }
 }

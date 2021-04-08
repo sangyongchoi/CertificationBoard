@@ -4,8 +4,11 @@ import com.example.certificationboard.member.application.MemberService;
 import com.example.certificationboard.member.domain.Member;
 import com.example.certificationboard.project.application.ProjectCreateRequest;
 import com.example.certificationboard.project.application.ProjectCreateResponse;
+import com.example.certificationboard.project.application.ProjectResponse;
 import com.example.certificationboard.project.application.ProjectService;
 import com.example.certificationboard.project.domain.Project;
+import org.springframework.data.domain.Pageable;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -32,5 +35,10 @@ public class ProjectController {
         final Long projectId = projectService.create(project, member);
 
         return new ProjectCreateResponse(projectId);
+    }
+
+    @GetMapping(value = "/projects")
+    public ProjectResponse list(Pageable pageable) {
+        return projectService.list(pageable);
     }
 }

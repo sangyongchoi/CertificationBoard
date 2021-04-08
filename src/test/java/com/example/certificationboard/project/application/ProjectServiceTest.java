@@ -13,8 +13,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(SpringExtension.class)
 @DataJpaTest
@@ -87,11 +86,13 @@ class ProjectServiceTest {
         Pageable pageable = PageRequest.of(0, 20);
 
         // when
-        final List<ProjectDto> list = projectService.list(pageable);
+        final ProjectResponse projectListInfo = projectService.list(pageable);
+        final List<ProjectDto> projectList = projectListInfo.getProjectList();
 
         //then
-        assertEquals(1, list.get(0).getId());
-        assertEquals(20, list.size());
+        assertEquals(1, projectList.get(0).getId());
+        assertTrue(projectListInfo.isHasNext());
+        assertEquals(20, projectList.size());
     }
 
     @Test
@@ -102,11 +103,27 @@ class ProjectServiceTest {
         Pageable pageable = PageRequest.of(1, 20);
 
         // when
-        final List<ProjectDto> list = projectService.list(pageable);
+        final ProjectResponse projectListInfo = projectService.list(pageable);
+        final List<ProjectDto> projectList = projectListInfo.getProjectList();
 
         //then
-        assertEquals(21, list.get(0).getId());
-        assertEquals(20, list.size());
+        assertEquals(21, projectList.get(0).getId());
+        assertTrue(projectListInfo.isHasNext());
+        assertEquals(20, projectList.size());
+    }
+
+    @Test
+    @DisplayName("페이징 처리 테스트 - 다음페이지 여부 false 테스트")
+    @Order(2)
+    public void get_project_list_when_hasNext_false(){
+        // given
+        Pageable pageable = PageRequest.of(6, 20);
+
+        // when
+        final ProjectResponse projectListInfo = projectService.list(pageable);
+
+        //then
+        assertFalse(projectListInfo.isHasNext());
     }
 
 }
