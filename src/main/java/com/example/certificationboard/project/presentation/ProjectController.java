@@ -39,6 +39,6 @@ public class ProjectController {
 
     @GetMapping(value = "/projects")
     public ProjectResponse list(Pageable pageable) {
-        return projectService.list(pageable);
+        return projectService.list(pageable, false);
     }
 }

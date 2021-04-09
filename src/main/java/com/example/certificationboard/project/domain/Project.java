@@ -3,10 +3,7 @@ package com.example.certificationboard.project.domain;
 import com.example.certificationboard.common.BaseTimeEntity;
 import lombok.Getter;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
 @Getter
@@ -19,6 +16,7 @@ public class Project extends BaseTimeEntity {
     private String createdMemberId;
     private String title;
     private String explain;
+    private boolean favorites;
 
     public Project() {
     }
@@ -28,6 +26,7 @@ public class Project extends BaseTimeEntity {
         this.createdMemberId = createdMemberId;
         this.title = title;
         this.explain = explain;
+        favorites = false;
     }
 
     @Override
@@ -38,6 +37,7 @@ public class Project extends BaseTimeEntity {
                 ", createdMemberId='" + createdMemberId + '\'' +
                 ", title='" + title + '\'' +
                 ", explain='" + explain + '\'' +
+                ", favorites=" + favorites +
                 '}';
     }
 }

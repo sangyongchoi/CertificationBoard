@@ -32,8 +32,8 @@ public class ProjectService {
         return createdProject.getId();
     }
 
-    public ProjectResponse list(Pageable pageable) {
-        final Page<Project> findProject = projectRepository.findAll(pageable);
+    public ProjectResponse list(Pageable pageable, boolean isFavorite) {
+        final Page<Project> findProject = projectRepository.findAllByFavorites(pageable, isFavorite);
         boolean hasNext = pageable.getPageNumber() < findProject.getTotalPages();
         final List<ProjectDto> projectList = findProject.stream()
                 .map(ProjectDto::of)

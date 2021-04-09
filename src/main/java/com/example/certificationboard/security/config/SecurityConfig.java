@@ -88,8 +88,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         return jwtFilter;
     }
 
-
-
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
@@ -103,7 +101,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         source.registerCorsConfiguration("/**", configuration);
         return source;
     }
-
 
     private static <T> T[] addAll(T[] firstArr, T[]... concatArgs) {
         T[] concatArr = firstArr;

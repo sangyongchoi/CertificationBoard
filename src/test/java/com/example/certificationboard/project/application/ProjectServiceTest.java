@@ -84,9 +84,10 @@ class ProjectServiceTest {
     public void get_project_list(){
         // given
         Pageable pageable = PageRequest.of(0, 20);
+        boolean isFavorites = false;
 
         // when
-        final ProjectResponse projectListInfo = projectService.list(pageable);
+        final ProjectResponse projectListInfo = projectService.list(pageable, isFavorites);
         final List<ProjectDto> projectList = projectListInfo.getProjectList();
 
         //then
@@ -101,9 +102,10 @@ class ProjectServiceTest {
     public void get_project_list_2page(){
         // given
         Pageable pageable = PageRequest.of(1, 20);
+        boolean isFavorite = false;
 
         // when
-        final ProjectResponse projectListInfo = projectService.list(pageable);
+        final ProjectResponse projectListInfo = projectService.list(pageable, isFavorite);
         final List<ProjectDto> projectList = projectListInfo.getProjectList();
 
         //then
@@ -118,9 +120,10 @@ class ProjectServiceTest {
     public void get_project_list_when_hasNext_false(){
         // given
         Pageable pageable = PageRequest.of(6, 20);
+        boolean isFavorite = false;
 
         // when
-        final ProjectResponse projectListInfo = projectService.list(pageable);
+        final ProjectResponse projectListInfo = projectService.list(pageable, isFavorite);
 
         //then
         assertFalse(projectListInfo.isHasNext());
