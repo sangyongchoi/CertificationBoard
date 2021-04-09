@@ -10,6 +10,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.annotation.web.configurers.ExpressionUrlAuthorizationConfigurer;
@@ -25,7 +26,10 @@ import java.util.Arrays;
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-    public static final String[] PUBLIC_URLS = {"/", "/signup", "/login"};
+    public static final String[] PUBLIC_URLS = {"/", "/signup", "/login"
+            , "/swagger-ui.html"
+            , "/webjars/springfox-swagger-ui/**"};
+
     private final LoginAuthenticationProvider loginAuthenticationProvider;
     private final JWTAuthenticationProvider jwtAuthenticationProvider;
     private final LoginAuthHandler loginAuthHandler;
@@ -60,6 +64,20 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.authenticationProvider(loginAuthenticationProvider);
         auth.authenticationProvider(jwtAuthenticationProvider);
+    }
+
+    @Override
+    public void configure(WebSecurity web) throws Exception {
+        web.ignoring()
+                .antMatchers("/css/**",
+                        "/js/**",
+                        "/img/**",
+                        "/lib/**",
+                        "/v2/**",
+                        "/webjars/**",
+                        "/swagger**",
+                        "/swagger-resources/**"
+                );
     }
 
     public JWTFilter jwtFilter() throws Exception {
