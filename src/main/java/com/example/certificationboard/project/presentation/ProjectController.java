@@ -37,8 +37,14 @@ public class ProjectController {
         return new ProjectCreateResponse(projectId);
     }
 
-    @GetMapping(value = "/projects")
-    public ProjectResponse list(Pageable pageable) {
+    @GetMapping(value = "/normal")
+    public ProjectResponse normalList(Pageable pageable) {
         return projectService.list(pageable, false);
     }
+
+    @GetMapping(value = "/favorite")
+    public ProjectResponse favoriteList(Pageable pageable) {
+        return projectService.list(pageable, true);
+    }
+
 }

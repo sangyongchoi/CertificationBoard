@@ -151,7 +151,7 @@ class ProjectControllerTest extends ControllerTest {
     }
 
     @Test
-    @DisplayName("프로젝트 리스트 가져오기 테스트")
+    @DisplayName("일반 프로젝트 리스트 가져오기 테스트")
     public void get_project_list() throws Exception {
         // given
         String size = "20";
@@ -159,7 +159,7 @@ class ProjectControllerTest extends ControllerTest {
 
         // when
         mockMvc
-                .perform(get("/projects")
+                .perform(get("/normal")
                         .header(JWTFilter.AUTH_HEADER_NAME, jwt)
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON)
@@ -173,7 +173,7 @@ class ProjectControllerTest extends ControllerTest {
     }
 
     @Test
-    @DisplayName("프로젝트 리스트 - jwt 누락")
+    @DisplayName("일반 프로젝트 리스트 - jwt 누락")
     public void get_project_list_omission_jwt() throws Exception {
         // given
         String size = "20";
@@ -181,7 +181,7 @@ class ProjectControllerTest extends ControllerTest {
 
         // when
         mockMvc
-                .perform(get("/projects")
+                .perform(get("/normal")
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON)
                         .param("page", page)
@@ -194,11 +194,11 @@ class ProjectControllerTest extends ControllerTest {
     }
 
     @Test
-    @DisplayName("프로젝트 리스트 - page 정보 누락 시 첫페이지 나오는거 테스트")
+    @DisplayName("일반 프로젝트 리스트 - page 정보 누락 시 첫페이지 나오는거 테스트")
     public void get_project_list_omission_pageinfo() throws Exception {
         // when
         mockMvc
-                .perform(get("/projects")
+                .perform(get("/normal")
                         .header(JWTFilter.AUTH_HEADER_NAME, jwt)
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON)

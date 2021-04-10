@@ -20,6 +20,6 @@ public class ProjectCreateRequest {
     private String explain;
 
     public Project toProjectEntity(Member member) {
-        return new Project(member.getOrganizationId(), member.getId(), title, explain);
+        return new Project(member.getOrganizationId(), member.getId(), title, explain, false);
     }
 }

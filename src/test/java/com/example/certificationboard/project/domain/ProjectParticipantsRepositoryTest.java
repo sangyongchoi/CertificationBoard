@@ -27,7 +27,7 @@ class ProjectParticipantsRepositoryTest {
     @DisplayName("기능 테스트")
     public void test() {
         // given
-        Project project = new Project("test", "test", "test", "test");
+        Project project = new Project("test", "test", "test", "test", false);
         final Project save = projectRepository.save(project);
 
         final Member save1 = memberRepository.save(new Member("csytest1", "csytest1", "csytest", Boolean.FALSE));

@@ -63,7 +63,7 @@ class MemberServiceTest {
             insertUser(userId);
             Member member = new Member(userId, "test", "test", false);
 
-            // when
+            // then
             memberService.signUp(member);
         });
     }

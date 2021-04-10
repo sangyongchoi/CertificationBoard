@@ -129,4 +129,32 @@ class ProjectServiceTest {
         assertFalse(projectListInfo.isHasNext());
     }
 
+    @Test
+    @DisplayName("즐겨찾기 추가 테스트")
+    public void project_add_favorite() {
+        // given
+        final Project project = projectRepository.findById(1L)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 값입니다."));
+
+        // when
+        final boolean isFavorite = projectService.addFavorite(project);
+
+        // then
+        assertTrue(isFavorite);
+    }
+
+    @Test
+    @DisplayName("즐겨찾기 제거 테스트")
+    public void project_delete_favorite() {
+        // given
+        final Project project = projectRepository.findById(1L)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 값입니다."));
+
+        // when
+        final boolean isFavorite = projectService.deleteFavorite(project);
+
+        // then
+        assertFalse(isFavorite);
+    }
+
 }

@@ -21,12 +21,20 @@ public class Project extends BaseTimeEntity {
     public Project() {
     }
 
-    public Project(String organizationId, String createdMemberId, String title, String explain) {
+    public Project(String organizationId, String createdMemberId, String title, String explain, boolean favorites) {
         this.organizationId = organizationId;
         this.createdMemberId = createdMemberId;
         this.title = title;
         this.explain = explain;
-        favorites = false;
+        this.favorites = favorites;
+    }
+
+    public void deleteFavorites(){
+        this.favorites = false;
+    }
+
+    public void addFavorites(){
+        this.favorites = true;
     }
 
     @Override
@@ -40,4 +48,5 @@ public class Project extends BaseTimeEntity {
                 ", favorites=" + favorites +
                 '}';
     }
+
 }
