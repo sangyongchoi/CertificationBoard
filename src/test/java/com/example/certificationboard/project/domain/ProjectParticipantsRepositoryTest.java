@@ -2,6 +2,7 @@ package com.example.certificationboard.project.domain;
 
 import com.example.certificationboard.member.domain.Member;
 import com.example.certificationboard.member.domain.MemberRepository;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +12,7 @@ import org.springframework.test.annotation.Rollback;
 import static org.junit.jupiter.api.Assertions.*;
 
 @DataJpaTest
-@Rollback
+@Disabled
 class ProjectParticipantsRepositoryTest {
 
     @Autowired

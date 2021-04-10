@@ -32,6 +32,11 @@ spring:
           auth: true
           starttls:
             enable: true
+  data:
+    mongodb:
+      host: localhost
+      port: 27017
+      database: flow
 logging:
   level:
     org:
@@ -39,3 +44,8 @@ logging:
         type:
           descriptor:
             sql: trace
+      springframework:
+        data:
+          mongodb:
+            repository:
+              Query: Info

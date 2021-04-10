@@ -15,6 +15,9 @@ spring:
     hibernate:
       ddl-auto: create
       format_sql: true
+    properties:
+      hibernate:
+        format_sql: true
   output:
     ansi:
       enabled: always
@@ -29,6 +32,20 @@ spring:
           auth: true
           starttls:
             enable: true
+  data:
+    mongodb:
+      host: localhost
+      port: 27017
+      database: flow
 logging:
   level:
-    logging.level.org.hibernate.type: trace
+    org:
+      hibernate:
+        type:
+          descriptor:
+            sql: trace
+      springframework:
+        data:
+          mongodb:
+            repository:
+              Query: Info

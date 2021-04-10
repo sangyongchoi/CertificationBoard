@@ -52,44 +52,8 @@ class ProjectServiceTest {
             final Project project = projectCreateRequest.toProjectEntity(member);
             Long id = projectService.create(project, member);
 
-            projectRepository.flush();
         }
-    }
-
-    @Test
-    @DisplayName("프로젝트 생성 테스트")
-    @Order(3)
-    public void create_project_test() {
-        // given
-        final String userId = "csytest1";
-        ProjectCreateRequest projectCreateRequest = new ProjectCreateRequest(userId, "test", "test");
-        final Member member = memberRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("잘못된 정보입니다."));
-        final Project project = projectCreateRequest.toProjectEntity(member);
-        final ProjectParticipantsId projectParticipantsId = new ProjectParticipantsId(project, member);
-
-        // when
-        Long id = projectService.create(project, member);
-        final ProjectParticipants projectParticipants = projectParticipantsRepository.findById(projectParticipantsId)
-                .orElseThrow(() -> new IllegalArgumentException("잘못된 정보입니다"));
-
-        //then
-        assertNotNull(id);
-        assertEquals(member.getId(), projectParticipants.getProjectParticipantsId().getMember().getId());
-        assertEquals(project.getId(), projectParticipants.getProjectParticipantsId().getProject().getId());
-    }
-
-    @Test
-    @DisplayName("id로 프로젝트 조회 테스트")
-    public void findById() {
-        // given
-        Long id = 1L;
-
-        // when
-        final Project byId = projectService.findById(id);
-
-        //then
-        assertEquals(1, byId.getId());
-        assertEquals("test1", byId.getTitle());
+        projectRepository.flush();
     }
 
     @Test
@@ -121,7 +85,8 @@ class ProjectServiceTest {
         // when
         final ProjectResponse projectListInfo = projectService.list(pageable, isFavorite);
         final List<ProjectDto> projectList = projectListInfo.getProjectList();
-
+        final List<Project> all = projectRepository.findAll();
+        all.forEach(System.out::println);
         //then
         assertEquals(21, projectList.get(0).getId());
         assertTrue(projectListInfo.isHasNext());
@@ -130,7 +95,7 @@ class ProjectServiceTest {
 
     @Test
     @DisplayName("페이징 처리 테스트 - 다음페이지 여부 false 테스트")
-    @Order(2)
+    @Order(3)
     public void get_project_list_when_hasNext_false(){
         // given
         Pageable pageable = PageRequest.of(5, 20);
@@ -144,7 +109,45 @@ class ProjectServiceTest {
     }
 
     @Test
+    @DisplayName("프로젝트 생성 테스트")
+    @Order(4)
+    public void create_project_test() {
+        // given
+        final String userId = "csytest1";
+        ProjectCreateRequest projectCreateRequest = new ProjectCreateRequest(userId, "test", "test");
+        final Member member = memberRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("잘못된 정보입니다."));
+        final Project project = projectCreateRequest.toProjectEntity(member);
+        final ProjectParticipantsId projectParticipantsId = new ProjectParticipantsId(project, member);
+
+        // when
+        Long id = projectService.create(project, member);
+        final ProjectParticipants projectParticipants = projectParticipantsRepository.findById(projectParticipantsId)
+                .orElseThrow(() -> new IllegalArgumentException("잘못된 정보입니다"));
+
+        //then
+        assertNotNull(id);
+        assertEquals(member.getId(), projectParticipants.getProjectParticipantsId().getMember().getId());
+        assertEquals(project.getId(), projectParticipants.getProjectParticipantsId().getProject().getId());
+    }
+
+    @Test
+    @DisplayName("id로 프로젝트 조회 테스트")
+    @Order(5)
+    public void findById() {
+        // given
+        Long id = 1L;
+
+        // when
+        final Project byId = projectService.findById(id);
+
+        //then
+        assertEquals(1, byId.getId());
+        assertEquals("test1", byId.getTitle());
+    }
+
+    @Test
     @DisplayName("즐겨찾기 추가 테스트")
+    @Order(6)
     public void project_add_favorite() {
         // given
         final Project project = projectRepository.findById(1L)
@@ -159,6 +162,7 @@ class ProjectServiceTest {
 
     @Test
     @DisplayName("즐겨찾기 제거 테스트")
+    @Order(7)
     public void project_delete_favorite() {
         // given
         final Project project = projectRepository.findById(1L)
