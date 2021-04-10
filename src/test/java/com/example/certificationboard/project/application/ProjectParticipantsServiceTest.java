@@ -41,7 +41,7 @@ class ProjectParticipantsServiceTest {
         memberRepository.save(member2);
 
         final String userId = "csytest1";
-        ProjectCreateRequest projectCreateRequest = new ProjectCreateRequest(userId, "test", "test");
+        ProjectCreateRequest projectCreateRequest = new ProjectCreateRequest(userId, "test1", "test");
         final Project project = projectCreateRequest.toProjectEntity(member);
         Long id = projectService.create(project, member);
     }

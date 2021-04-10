@@ -1,5 +1,6 @@
 package com.example.certificationboard.common;
 
+import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.example.certificationboard.common.exception.ErrorResponse;
 import com.example.certificationboard.member.exception.DuplicateUserException;
 import org.springframework.http.HttpStatus;
@@ -13,6 +14,12 @@ public class GlobalExceptionHandler {
     @ResponseStatus(HttpStatus.CONFLICT)
     @ExceptionHandler(DuplicateUserException.class)
     public ErrorResponse userDuplicateExceptionHandle(DuplicateUserException e) {
+        return new ErrorResponse(e.getMessage());
+    }
+
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    @ExceptionHandler(JWTVerificationException.class)
+    public ErrorResponse jwtVerifyExceptionHandle(JWTVerificationException e){
         return new ErrorResponse(e.getMessage());
     }
 

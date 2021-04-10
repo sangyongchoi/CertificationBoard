@@ -2,16 +2,11 @@ package com.example.certificationboard.project.presentation;
 
 import com.example.certificationboard.member.application.MemberService;
 import com.example.certificationboard.member.domain.Member;
-import com.example.certificationboard.project.application.ProjectCreateRequest;
-import com.example.certificationboard.project.application.ProjectCreateResponse;
-import com.example.certificationboard.project.application.ProjectResponse;
-import com.example.certificationboard.project.application.ProjectService;
+import com.example.certificationboard.project.application.*;
 import com.example.certificationboard.project.domain.Project;
 import org.springframework.data.domain.Pageable;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
@@ -47,4 +42,19 @@ public class ProjectController {
         return projectService.list(pageable, true);
     }
 
+    @PostMapping(value = "/favorite")
+    public ResponseEntity<Boolean> addFavorite(@RequestBody @Valid ProjectRequest projectRequest){
+        final Project project = projectService.findById(projectRequest.getId());
+        final boolean isFavorite = projectService.addFavorite(project);
+
+        return ResponseEntity.ok(isFavorite);
+    }
+
+    @DeleteMapping(value = "/favorite")
+    public ResponseEntity<Boolean> deleteFavorite(@RequestBody @Valid ProjectRequest projectRequest){
+        final Project project = projectService.findById(projectRequest.getId());
+        final boolean isFavorite = projectService.addFavorite(project);
+
+        return ResponseEntity.ok(isFavorite);
+    }
 }

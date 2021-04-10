@@ -4,10 +4,7 @@ import com.example.certificationboard.ControllerTest;
 import com.example.certificationboard.TestUtil;
 import com.example.certificationboard.member.application.MemberService;
 import com.example.certificationboard.member.domain.Member;
-import com.example.certificationboard.project.application.ProjectCreateRequest;
-import com.example.certificationboard.project.application.ProjectDto;
-import com.example.certificationboard.project.application.ProjectResponse;
-import com.example.certificationboard.project.application.ProjectService;
+import com.example.certificationboard.project.application.*;
 import com.example.certificationboard.project.domain.Project;
 import com.example.certificationboard.security.filter.JWTFilter;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -28,8 +25,7 @@ import java.util.List;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -207,5 +203,113 @@ class ProjectControllerTest extends ControllerTest {
                 .andDo(print())
                 //then
                 .andExpect(status().isOk());
+    }
+
+    @Test
+    @DisplayName("즐겨찾기 추가 테스트")
+    public void addFavorite() throws Exception {
+        ProjectRequest projectRequest = new ProjectRequest(1L);
+
+        // when
+        mockMvc
+                .perform(post("/favorite")
+                        .header(JWTFilter.AUTH_HEADER_NAME, jwt)
+                        .content(objectMapper.writeValueAsString(projectRequest))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .with(csrf())
+                )
+                .andDo(print())
+                //then
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    @DisplayName("즐겨찾기 추가 테스트 - 파라미터 누락")
+    public void addFavorite_omisstion_id() throws Exception {
+        // when
+        mockMvc
+                .perform(post("/favorite")
+                        .header(JWTFilter.AUTH_HEADER_NAME, jwt)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .with(csrf())
+                )
+                .andDo(print())
+                //then
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    @DisplayName("즐겨찾기 추가 테스트 - jwt 누락")
+    public void addFavorite_omisstion_jwt() throws Exception {
+        // given
+        ProjectRequest projectRequest = new ProjectRequest(1L);
+
+        // when
+        mockMvc
+                .perform(post("/favorite")
+                        .content(objectMapper.writeValueAsString(projectRequest))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .with(csrf())
+                )
+                .andDo(print())
+                //then
+                .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    @DisplayName("즐겨찾기 제거 테스트")
+    public void deleteFavorite() throws Exception {
+        ProjectRequest projectRequest = new ProjectRequest(1L);
+
+        // when
+        mockMvc
+                .perform(delete("/favorite")
+                        .header(JWTFilter.AUTH_HEADER_NAME, jwt)
+                        .content(objectMapper.writeValueAsString(projectRequest))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .with(csrf())
+                )
+                .andDo(print())
+                //then
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    @DisplayName("즐겨찾기 제거 테스트 - 파라미터 누락")
+    public void deleteFavorite_omisstion_id() throws Exception {
+        // when
+        mockMvc
+                .perform(delete("/favorite")
+                        .header(JWTFilter.AUTH_HEADER_NAME, jwt)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .with(csrf())
+                )
+                .andDo(print())
+                //then
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    @DisplayName("즐겨찾기 제거 테스트 - jwt 누락")
+    public void deleteFavorite_omisstion_jwt() throws Exception {
+        // given
+        ProjectRequest projectRequest = new ProjectRequest(1L);
+
+        // when
+        mockMvc
+                .perform(delete("/favorite")
+                        .content(objectMapper.writeValueAsString(projectRequest))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .with(csrf())
+                )
+                .andDo(print())
+                //then
+                .andExpect(status().isUnauthorized());
     }
 }

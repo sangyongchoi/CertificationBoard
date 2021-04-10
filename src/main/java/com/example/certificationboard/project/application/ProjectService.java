@@ -33,9 +33,14 @@ public class ProjectService {
         return createdProject.getId();
     }
 
+    public Project findById(Long id){
+        return projectRepository.findById(id)
+                .orElseThrow(()-> new IllegalArgumentException("잘못된 인자입니다."));
+    }
+
     public ProjectResponse list(Pageable pageable, boolean isFavorite) {
         final Page<Project> findProject = projectRepository.findAllByFavorites(pageable, isFavorite);
-        boolean hasNext = pageable.getPageNumber() < findProject.getTotalPages();
+        boolean hasNext = pageable.getPageNumber() + 1 < findProject.getTotalPages();
         final List<ProjectDto> projectList = findProject.stream()
                 .map(ProjectDto::of)
                 .collect(Collectors.toList());

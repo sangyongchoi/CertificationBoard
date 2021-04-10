@@ -46,8 +46,8 @@ class ProjectServiceTest {
     private void make100Project(){
         final String userId = "csytest1";
 
-        for (int i = 0; i < 100; i++) {
-            ProjectCreateRequest projectCreateRequest = new ProjectCreateRequest(userId, "test", "test");
+        for (int i = 1; i <= 100; i++) {
+            ProjectCreateRequest projectCreateRequest = new ProjectCreateRequest(userId, "test" + i, "test");
             final Member member = memberRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("잘못된 정보입니다."));
             final Project project = projectCreateRequest.toProjectEntity(member);
             Long id = projectService.create(project, member);
@@ -76,6 +76,20 @@ class ProjectServiceTest {
         assertNotNull(id);
         assertEquals(member.getId(), projectParticipants.getProjectParticipantsId().getMember().getId());
         assertEquals(project.getId(), projectParticipants.getProjectParticipantsId().getProject().getId());
+    }
+
+    @Test
+    @DisplayName("id로 프로젝트 조회 테스트")
+    public void findById() {
+        // given
+        Long id = 1L;
+
+        // when
+        final Project byId = projectService.findById(id);
+
+        //then
+        assertEquals(1, byId.getId());
+        assertEquals("test1", byId.getTitle());
     }
 
     @Test
@@ -119,7 +133,7 @@ class ProjectServiceTest {
     @Order(2)
     public void get_project_list_when_hasNext_false(){
         // given
-        Pageable pageable = PageRequest.of(6, 20);
+        Pageable pageable = PageRequest.of(5, 20);
         boolean isFavorite = false;
 
         // when

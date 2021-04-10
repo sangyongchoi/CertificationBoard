@@ -1,5 +1,6 @@
 package com.example.certificationboard.member.application;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +11,7 @@ import org.springframework.mail.SimpleMailMessage;
 import static org.junit.jupiter.api.Assertions.fail;
 
 @SpringBootTest
+@Disabled
 class MailServiceTest {
 
     @Autowired

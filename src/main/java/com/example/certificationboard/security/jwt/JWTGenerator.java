@@ -34,7 +34,7 @@ public class JWTGenerator {
             final Map<String, Claim> tokenClaim = getTokenClaim(token);
             return tokenClaim.get("key").asString();
         } catch (JWTVerificationException e) {
-            return "";
+            throw e;
         }
     }
 
