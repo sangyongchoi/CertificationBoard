@@ -3,20 +3,22 @@ package com.example.certificationboard.project.application;
 import com.example.certificationboard.member.domain.Member;
 import com.example.certificationboard.member.domain.MemberRepository;
 import com.example.certificationboard.project.domain.*;
+import com.example.certificationboard.project.query.ProjectQueryRepository;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@ExtendWith(SpringExtension.class)
-@DataJpaTest
+//@ExtendWith(SpringExtension.class)
+//@DataJpaTest
+@SpringBootTest
 @Rollback(value = false)
 class ProjectParticipantsServiceTest {
 
@@ -27,6 +29,9 @@ class ProjectParticipantsServiceTest {
     ProjectParticipantsRepository projectParticipantsRepository;
 
     @Autowired
+    ProjectQueryRepository projectQueryRepository;
+
+    @Autowired
     MemberRepository memberRepository;
 
     ProjectParticipantsService projectParticipantsService;
@@ -35,7 +40,7 @@ class ProjectParticipantsServiceTest {
     @BeforeEach
     void setup(){
         projectParticipantsService = new ProjectParticipantsService(projectParticipantsRepository);
-        projectService = new ProjectService(projectRepository, projectParticipantsService);
+        projectService = new ProjectService(projectRepository, projectParticipantsService, projectQueryRepository);
         final Member member = new Member("csytest1", "csytest1", "csytest1", false);
         final Member member2 = new Member("csytest2", "csytest1", "csytest1", false);
         memberRepository.save(member);
@@ -54,13 +59,29 @@ class ProjectParticipantsServiceTest {
         final Project project = projectRepository.findById(1L).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 프로젝트입니다."));
         final Member member = memberRepository.findById("csytest2").orElseThrow(() -> new IllegalArgumentException("잘못된 정보입니다."));
         final ProjectParticipantsId projectParticipantsId = new ProjectParticipantsId(project, member);
-        final ProjectParticipants projectParticipants = new ProjectParticipants(projectParticipantsId, ProjectParticipants.Role.MEMBER);
+        final ProjectParticipants projectParticipants = new ProjectParticipants(projectParticipantsId, ProjectParticipants.Role.MEMBER, false);
 
         // when
         final ProjectParticipants join = projectParticipantsService.join(projectParticipants);
 
         // then
         assertEquals(projectParticipants.getProjectParticipantsId(), join.getProjectParticipantsId());
+    }
+
+    @Test
+    @DisplayName("프로젝트 참여자 조회 테스트")
+    public void find_project_participants() {
+        // given
+        final Project project = projectRepository.findById(1L).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 프로젝트입니다."));
+        final Member member = memberRepository.findById("csytest2").orElseThrow(() -> new IllegalArgumentException("잘못된 정보입니다."));
+        final ProjectParticipantsId projectParticipantsId = new ProjectParticipantsId(project, member);
+
+        // when
+        final ProjectParticipants participants = projectParticipantsService.findParticipants(projectParticipantsId);
+
+        //then
+        assertEquals("csytest2", participants.getProjectParticipantsId().getMember().getId());
+        assertEquals(1, participants.getProjectParticipantsId().getProject().getId());
     }
 
 }

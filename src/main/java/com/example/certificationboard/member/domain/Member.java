@@ -93,7 +93,7 @@ public class Member extends BaseTimeEntity implements UserDetails {
         return true;
     }
 
-    private enum  Role {
+    public enum Role {
         ROLE_ADMIN,
         ROLE_MEMBER
     }

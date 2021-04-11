@@ -3,20 +3,20 @@ package com.example.certificationboard.project.application;
 import com.example.certificationboard.member.domain.Member;
 import com.example.certificationboard.member.domain.MemberRepository;
 import com.example.certificationboard.project.domain.*;
+import com.example.certificationboard.project.query.ProjectQueryRepository;
 import org.junit.jupiter.api.*;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import java.util.List;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-import static org.junit.jupiter.api.Assertions.*;
-
-@ExtendWith(SpringExtension.class)
-@DataJpaTest
+//@ExtendWith(SpringExtension.class)
+//@DataJpaTest
+@SpringBootTest
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class ProjectServiceTest {
 
@@ -27,6 +27,9 @@ class ProjectServiceTest {
     ProjectParticipantsRepository projectParticipantsRepository;
 
     @Autowired
+    ProjectQueryRepository projectQueryRepository;
+
+    @Autowired
     MemberRepository memberRepository;
 
     ProjectParticipantsService projectParticipantsService;
@@ -35,7 +38,7 @@ class ProjectServiceTest {
     @BeforeAll
     void setup(){
         projectParticipantsService = new ProjectParticipantsService(projectParticipantsRepository);
-        projectService = new ProjectService(projectRepository, projectParticipantsService);
+        projectService = new ProjectService(projectRepository, projectParticipantsService, projectQueryRepository);
 
         final Member member = new Member("csytest1", "csytest1", "csytest1", false);
         memberRepository.save(member);
@@ -56,56 +59,20 @@ class ProjectServiceTest {
         projectRepository.flush();
     }
 
+
     @Test
-    @DisplayName("페이징 처리 테스트 - 1페이지")
+    @DisplayName("프로젝트 리스트 조회")
     @Order(1)
-    public void get_project_list(){
+    public void find_project_list() throws Exception{
         // given
-        Pageable pageable = PageRequest.of(0, 20);
-        boolean isFavorites = false;
+        String memberId = "csytest1";
+        final Pageable pageable = PageRequest.of(0, 20);
 
         // when
-        final ProjectResponse projectListInfo = projectService.list(pageable, isFavorites);
-        final List<ProjectDto> projectList = projectListInfo.getProjectList();
+        final Page<ProjectInfo> lists = projectQueryRepository.findLists(pageable, memberId, false);
 
-        //then
-        assertEquals(1, projectList.get(0).getId());
-        assertTrue(projectListInfo.isHasNext());
-        assertEquals(20, projectList.size());
-    }
-
-    @Test
-    @DisplayName("페이징 처리 테스트 - 2페이지")
-    @Order(2)
-    public void get_project_list_2page(){
-        // given
-        Pageable pageable = PageRequest.of(1, 20);
-        boolean isFavorite = false;
-
-        // when
-        final ProjectResponse projectListInfo = projectService.list(pageable, isFavorite);
-        final List<ProjectDto> projectList = projectListInfo.getProjectList();
-        final List<Project> all = projectRepository.findAll();
-        all.forEach(System.out::println);
-        //then
-        assertEquals(21, projectList.get(0).getId());
-        assertTrue(projectListInfo.isHasNext());
-        assertEquals(20, projectList.size());
-    }
-
-    @Test
-    @DisplayName("페이징 처리 테스트 - 다음페이지 여부 false 테스트")
-    @Order(3)
-    public void get_project_list_when_hasNext_false(){
-        // given
-        Pageable pageable = PageRequest.of(5, 20);
-        boolean isFavorite = false;
-
-        // when
-        final ProjectResponse projectListInfo = projectService.list(pageable, isFavorite);
-
-        //then
-        assertFalse(projectListInfo.isHasNext());
+        // then
+        lists.forEach(System.out::println);
     }
 
     @Test
@@ -144,35 +111,4 @@ class ProjectServiceTest {
         assertEquals(1, byId.getId());
         assertEquals("test1", byId.getTitle());
     }
-
-    @Test
-    @DisplayName("즐겨찾기 추가 테스트")
-    @Order(6)
-    public void project_add_favorite() {
-        // given
-        final Project project = projectRepository.findById(1L)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 값입니다."));
-
-        // when
-        final boolean isFavorite = projectService.addFavorite(project);
-
-        // then
-        assertTrue(isFavorite);
-    }
-
-    @Test
-    @DisplayName("즐겨찾기 제거 테스트")
-    @Order(7)
-    public void project_delete_favorite() {
-        // given
-        final Project project = projectRepository.findById(1L)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 값입니다."));
-
-        // when
-        final boolean isFavorite = projectService.deleteFavorite(project);
-
-        // then
-        assertFalse(isFavorite);
-    }
-
 }

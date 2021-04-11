@@ -2,19 +2,19 @@ package com.example.certificationboard.project.application;
 
 import java.util.List;
 
-public class ProjectResponse {
+public class ProjectPageResponse {
     private boolean hasNext;
-    private List<ProjectDto> projectList;
+    private List<ProjectInfo> projectList;
 
     public boolean isHasNext() {
         return hasNext;
     }
 
-    public List<ProjectDto> getProjectList() {
+    public List<ProjectInfo> getProjectList() {
         return projectList;
     }
 
-    public ProjectResponse(boolean hasNext, List<ProjectDto> projectList) {
+    public ProjectPageResponse(boolean hasNext, List<ProjectInfo> projectList) {
         this.hasNext = hasNext;
         this.projectList = projectList;
     }

@@ -28,14 +28,14 @@ class ProjectParticipantsRepositoryTest {
     @DisplayName("기능 테스트")
     public void test() {
         // given
-        Project project = new Project("test", "test", "test", "test", false);
+        Project project = new Project("test", "test", "test", "test");
         final Project save = projectRepository.save(project);
 
         final Member save1 = memberRepository.save(new Member("csytest1", "csytest1", "csytest", Boolean.FALSE));
         final ProjectParticipantsId projectParticipantsId = new ProjectParticipantsId(save, save1);
         final ProjectParticipantsId projectParticipantsId2 = new ProjectParticipantsId(save, save1);
-        ProjectParticipants projectParticipants = new ProjectParticipants(projectParticipantsId, ProjectParticipants.Role.MEMBER);
-        ProjectParticipants projectParticipants1 = new ProjectParticipants(projectParticipantsId2, ProjectParticipants.Role.MEMBER);
+        ProjectParticipants projectParticipants = new ProjectParticipants(projectParticipantsId, ProjectParticipants.Role.MEMBER, false);
+        ProjectParticipants projectParticipants1 = new ProjectParticipants(projectParticipantsId2, ProjectParticipants.Role.MEMBER, false);
         projectParticipants.exit();
         // when
         final ProjectParticipants save2 = projectParticipantsRepository.save(projectParticipants);

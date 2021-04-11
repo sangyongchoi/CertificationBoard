@@ -4,8 +4,6 @@ import com.example.certificationboard.member.application.MemberService;
 import com.example.certificationboard.member.domain.Member;
 import com.example.certificationboard.project.application.*;
 import com.example.certificationboard.project.domain.Project;
-import org.springframework.data.domain.Pageable;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -14,10 +12,12 @@ import javax.validation.Valid;
 public class ProjectController {
 
     private final ProjectService projectService;
+    private final ProjectParticipantsService projectParticipantsService;
     private final MemberService memberService;
 
-    public ProjectController(ProjectService projectService, MemberService memberService) {
+    public ProjectController(ProjectService projectService, ProjectParticipantsService projectParticipantsService, MemberService memberService) {
         this.projectService = projectService;
+        this.projectParticipantsService = projectParticipantsService;
         this.memberService = memberService;
     }
 
@@ -32,29 +32,14 @@ public class ProjectController {
         return new ProjectCreateResponse(projectId);
     }
 
-    @GetMapping(value = "/normal")
-    public ProjectResponse normalList(Pageable pageable) {
-        return projectService.list(pageable, false);
-    }
+//    @GetMapping(value = "/normal")
+//    public ProjectPageResponse normalList(@RequestBody @Valid ProjectPageRequest pageRequest) {
+//        return projectService.list(pageable, false);
+//    }
+//
+//    @GetMapping(value = "/favorite")
+//    public ProjectPageResponse favoriteList(@RequestBody @Valid ProjectPageRequest pageRequest) {
+//        return projectService.list(pageable, true);
+//    }
 
-    @GetMapping(value = "/favorite")
-    public ProjectResponse favoriteList(Pageable pageable) {
-        return projectService.list(pageable, true);
-    }
-
-    @PostMapping(value = "/favorite")
-    public ResponseEntity<Boolean> addFavorite(@RequestBody @Valid ProjectRequest projectRequest){
-        final Project project = projectService.findById(projectRequest.getId());
-        final boolean isFavorite = projectService.addFavorite(project);
-
-        return ResponseEntity.ok(isFavorite);
-    }
-
-    @DeleteMapping(value = "/favorite")
-    public ResponseEntity<Boolean> deleteFavorite(@RequestBody @Valid ProjectRequest projectRequest){
-        final Project project = projectService.findById(projectRequest.getId());
-        final boolean isFavorite = projectService.addFavorite(project);
-
-        return ResponseEntity.ok(isFavorite);
-    }
 }

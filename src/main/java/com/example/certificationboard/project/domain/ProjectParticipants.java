@@ -17,13 +17,14 @@ public class ProjectParticipants {
     private ProjectParticipantsId projectParticipantsId;
 
     private Boolean isStatus;
-
+    private boolean favorites;
     @Enumerated(EnumType.STRING)
     private Role role;
 
-    public ProjectParticipants(ProjectParticipantsId projectParticipantsId, Role role) {
+    public ProjectParticipants(ProjectParticipantsId projectParticipantsId, Role role, boolean favorites) {
         this.projectParticipantsId = projectParticipantsId;
         this.role = role;
+        this.favorites = favorites;
         join();
     }
 

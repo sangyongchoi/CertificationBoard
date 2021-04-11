@@ -14,10 +14,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.mapping.JpaMetamodelMappingContext;
 import org.springframework.http.MediaType;
-import org.springframework.test.annotation.Rollback;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.ArrayList;
@@ -42,6 +40,9 @@ class ProjectControllerTest extends ControllerTest {
     ProjectService projectService;
 
     @MockBean
+    ProjectParticipantsService projectParticipantsService;
+
+    @MockBean
     MemberService memberService;
 
     @Autowired
@@ -53,18 +54,18 @@ class ProjectControllerTest extends ControllerTest {
         jwt = TestUtil.createToken();
         final Member member1 = new Member("csytest1", "csytest1", "test", false);
         given(memberService.findMemberById(userId)).willReturn(member1);
-        given(projectService.list(any(Pageable.class), any(boolean.class))).willReturn(findProjectList());
+        //given(projectService.list(any(Pageable.class), any(boolean.class))).willReturn(findProjectList());
         given(projectService.create(any(Project.class), any(Member.class))).willReturn(1L);
     }
 
-    private ProjectResponse findProjectList(){
-        List<ProjectDto> projectDtoList = new ArrayList<>();
+    private ProjectPageResponse findProjectList(){
+        List<ProjectInfo> projectInfoList = new ArrayList<>();
 
         for (long i = 1; i <= 20; i++) {
-            projectDtoList.add(new ProjectDto(i , "test", "test"));
+            projectInfoList.add(new ProjectInfo(i , "test", "test"));
         }
 
-        return new ProjectResponse(true, projectDtoList);
+        return new ProjectPageResponse(true, projectInfoList);
     }
 
     @Test
@@ -206,111 +207,4 @@ class ProjectControllerTest extends ControllerTest {
                 .andExpect(status().isOk());
     }
 
-    @Test
-    @DisplayName("즐겨찾기 추가 테스트")
-    public void addFavorite() throws Exception {
-        ProjectRequest projectRequest = new ProjectRequest(1L);
-
-        // when
-        mockMvc
-                .perform(post("/favorite")
-                        .header(JWTFilter.AUTH_HEADER_NAME, jwt)
-                        .content(objectMapper.writeValueAsString(projectRequest))
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .accept(MediaType.APPLICATION_JSON)
-                        .with(csrf())
-                )
-                .andDo(print())
-                //then
-                .andExpect(status().isOk());
-    }
-
-    @Test
-    @DisplayName("즐겨찾기 추가 테스트 - 파라미터 누락")
-    public void addFavorite_omisstion_id() throws Exception {
-        // when
-        mockMvc
-                .perform(post("/favorite")
-                        .header(JWTFilter.AUTH_HEADER_NAME, jwt)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .accept(MediaType.APPLICATION_JSON)
-                        .with(csrf())
-                )
-                .andDo(print())
-                //then
-                .andExpect(status().isBadRequest());
-    }
-
-    @Test
-    @DisplayName("즐겨찾기 추가 테스트 - jwt 누락")
-    public void addFavorite_omisstion_jwt() throws Exception {
-        // given
-        ProjectRequest projectRequest = new ProjectRequest(1L);
-
-        // when
-        mockMvc
-                .perform(post("/favorite")
-                        .content(objectMapper.writeValueAsString(projectRequest))
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .accept(MediaType.APPLICATION_JSON)
-                        .with(csrf())
-                )
-                .andDo(print())
-                //then
-                .andExpect(status().isUnauthorized());
-    }
-
-    @Test
-    @DisplayName("즐겨찾기 제거 테스트")
-    public void deleteFavorite() throws Exception {
-        ProjectRequest projectRequest = new ProjectRequest(1L);
-
-        // when
-        mockMvc
-                .perform(delete("/favorite")
-                        .header(JWTFilter.AUTH_HEADER_NAME, jwt)
-                        .content(objectMapper.writeValueAsString(projectRequest))
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .accept(MediaType.APPLICATION_JSON)
-                        .with(csrf())
-                )
-                .andDo(print())
-                //then
-                .andExpect(status().isOk());
-    }
-
-    @Test
-    @DisplayName("즐겨찾기 제거 테스트 - 파라미터 누락")
-    public void deleteFavorite_omisstion_id() throws Exception {
-        // when
-        mockMvc
-                .perform(delete("/favorite")
-                        .header(JWTFilter.AUTH_HEADER_NAME, jwt)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .accept(MediaType.APPLICATION_JSON)
-                        .with(csrf())
-                )
-                .andDo(print())
-                //then
-                .andExpect(status().isBadRequest());
-    }
-
-    @Test
-    @DisplayName("즐겨찾기 제거 테스트 - jwt 누락")
-    public void deleteFavorite_omisstion_jwt() throws Exception {
-        // given
-        ProjectRequest projectRequest = new ProjectRequest(1L);
-
-        // when
-        mockMvc
-                .perform(delete("/favorite")
-                        .content(objectMapper.writeValueAsString(projectRequest))
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .accept(MediaType.APPLICATION_JSON)
-                        .with(csrf())
-                )
-                .andDo(print())
-                //then
-                .andExpect(status().isUnauthorized());
-    }
 }

@@ -5,18 +5,22 @@ import javax.validation.constraints.NotNull;
 public class ProjectRequest {
 
     @NotNull
-    private Long id;
+    private Long projectId;
+    private String memberId;
 
     public ProjectRequest() {
     }
 
-    public ProjectRequest(Long id) {
-        this.id = id;
+    public ProjectRequest(@NotNull Long projectId, String memberId) {
+        this.projectId = projectId;
+        this.memberId = memberId;
     }
 
-    public Long getId() {
-        return id;
+    public Long getProjectId() {
+        return projectId;
     }
 
-
+    public String getMemberId() {
+        return memberId;
+    }
 }
