@@ -4,6 +4,7 @@ import com.example.certificationboard.member.application.MemberService;
 import com.example.certificationboard.member.domain.Member;
 import com.example.certificationboard.project.application.*;
 import com.example.certificationboard.project.domain.Project;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -32,14 +33,14 @@ public class ProjectController {
         return new ProjectCreateResponse(projectId);
     }
 
-//    @GetMapping(value = "/normal")
-//    public ProjectPageResponse normalList(@RequestBody @Valid ProjectPageRequest pageRequest) {
-//        return projectService.list(pageable, false);
-//    }
-//
-//    @GetMapping(value = "/favorite")
-//    public ProjectPageResponse favoriteList(@RequestBody @Valid ProjectPageRequest pageRequest) {
-//        return projectService.list(pageable, true);
-//    }
+    @GetMapping(value = "/normal")
+    public ProjectPageResponse normalList(Pageable pageable, String memberId) {
+        return projectService.list(pageable, memberId, false);
+    }
+
+    @GetMapping(value = "/favorite")
+    public ProjectPageResponse favoriteList(Pageable pageable, String memberId) {
+        return projectService.list(pageable, memberId, true);
+    }
 
 }
