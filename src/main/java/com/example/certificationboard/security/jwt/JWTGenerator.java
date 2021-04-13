@@ -46,7 +46,6 @@ public class JWTGenerator {
     }
 
     private void tokenVerify(String token){
-        final String[] tokenInfo = token.split(" ");
         final JWTVerifier build = JWT.require(getAlgorithm())
                 .withIssuer("test")
                 .build();
