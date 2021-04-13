@@ -13,11 +13,13 @@ import java.util.Map;
 
 public class JWTGenerator {
 
-    private static final int EXPIRE_TIME = 864000000;
+    //private static final int EXPIRE_TIME = 864000000;
+    private static final int EXPIRE_TIME = 1864000000;
 
     public String createToken(Map<String, String> claim) {
         final JWTCreator.Builder jwtBuilder = JWT.create()
-                .withExpiresAt(getExpireDate());
+                .withExpiresAt(getExpireDate())
+                .withIssuer("test");
 
         claim.forEach(jwtBuilder::withClaim);
 
@@ -30,8 +32,13 @@ public class JWTGenerator {
 
     public String authenticationVerify(String token) {
         try {
-            tokenVerify(token);
+            final String[] tokenInfo = token.split(" ");
+            if(tokenInfo.length > 1){
+                token = tokenInfo[1];
+            }
             final Map<String, Claim> tokenClaim = getTokenClaim(token);
+
+            tokenVerify(token);
             return tokenClaim.get("key").asString();
         } catch (JWTVerificationException e) {
             throw e;
@@ -39,7 +46,11 @@ public class JWTGenerator {
     }
 
     private void tokenVerify(String token){
-        final JWTVerifier build = JWT.require(getAlgorithm()).build();
+        final String[] tokenInfo = token.split(" ");
+        final JWTVerifier build = JWT.require(getAlgorithm())
+                .withIssuer("test")
+                .build();
+
         build.verify(token);
     }
 
@@ -53,6 +64,6 @@ public class JWTGenerator {
     }
 
     private Algorithm getAlgorithm() {
-        return Algorithm.HMAC512("test".getBytes());
+        return Algorithm.HMAC256("nk16d3dj13WIzhMd2F5hMH1234EyUEWw".getBytes());
     }
 }
