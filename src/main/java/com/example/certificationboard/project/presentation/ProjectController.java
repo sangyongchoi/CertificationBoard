@@ -34,13 +34,13 @@ public class ProjectController {
     }
 
     @GetMapping(value = "/normal")
-    public ProjectPageResponse normalList(Pageable pageable, String memberId) {
-        return projectService.list(pageable, memberId, false);
+    public ProjectPageResponse normalList(Pageable pageable, String userId) {
+        return projectService.list(pageable, userId, false);
     }
 
     @GetMapping(value = "/favorite")
-    public ProjectPageResponse favoriteList(Pageable pageable, String memberId) {
-        return projectService.list(pageable, memberId, true);
+    public ProjectPageResponse favoriteList(Pageable pageable, String userId) {
+        return projectService.list(pageable, userId, true);
     }
 
 }
