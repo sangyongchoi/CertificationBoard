@@ -44,6 +44,7 @@ public class ProjectQueryRepository {
                 .where(qProjectParticipants.projectParticipantsId.member.id.eq(memberId)
                         .and(qProjectParticipants.favorites.eq(favorites)))
                 .offset(pageable.getOffset())
-                .limit(pageable.getPageSize());
+                .limit(pageable.getPageSize())
+                .orderBy(qProject.id.desc());
     }
 }
