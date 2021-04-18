@@ -3,6 +3,7 @@ package com.example.certificationboard.post
 import com.example.certificationboard.post.application.PostService
 import com.example.certificationboard.post.application.request.TaskRequest
 import com.example.certificationboard.post.application.response.PostResponse
+import org.bson.types.ObjectId
 import org.springframework.data.domain.Pageable
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
@@ -19,8 +20,8 @@ class PostController(
     fun list(pageable: Pageable, userId:String, projectId: Long): PostResponse = postService.findList(pageable, projectId, userId)
 
     @PostMapping("/task")
-    fun createTask(@RequestBody @Valid taskRequest:TaskRequest){
+    fun createTask(@RequestBody @Valid taskRequest:TaskRequest): ObjectId {
         val task = taskRequest.convertToPostEntity()
-        postService.create(task)
+        return postService.create(task)
     }
 }
