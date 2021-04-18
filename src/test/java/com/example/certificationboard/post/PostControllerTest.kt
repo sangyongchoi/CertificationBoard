@@ -51,8 +51,8 @@ internal class PostControllerTest: ControllerTest(){
     }
 
     private fun getDummyResponse(): PostResponse {
-        var hasNext = false;
-        var postInfos = mutableListOf<PostInfo>()
+        val hasNext = false
+        val postInfos = mutableListOf<PostInfo>()
 
         postInfos.add(PostInfo(ObjectId.get(), 1L, Post.Type.TASK, TaskContents("test", LocalDateTime.of(2021, 4, 10, 0, 0), LocalDateTime.of(2021, 4, 11, 23, 59))))
         postInfos.add(PostInfo(ObjectId.get(), 1L, Post.Type.TASK, TaskContents("test", LocalDateTime.of(2021, 4, 10, 0, 0), LocalDateTime.of(2021, 4, 11, 23, 59))))
