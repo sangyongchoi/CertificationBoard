@@ -26,12 +26,12 @@ public class ProjectParticipantsService {
     }
 
     public ProjectParticipants findParticipants(ProjectParticipantsId participantsId){
-        return projectParticipantsRepository.getOne(participantsId);
+        return projectParticipantsRepository.findById(participantsId)
+                .orElseThrow(()-> new IllegalArgumentException("존재하지 않는 값입니다."));
     }
 
     public ProjectParticipants addFavorite(ProjectParticipantsId participantsId){
-        final ProjectParticipants projectParticipants = projectParticipantsRepository.findById(participantsId)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 값입니다."));
+        final ProjectParticipants projectParticipants = findParticipants(participantsId);
 
         projectParticipants.addFavorite();
         projectParticipantsRepository.save(projectParticipants);

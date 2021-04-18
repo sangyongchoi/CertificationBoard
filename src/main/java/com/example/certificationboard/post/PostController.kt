@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.RestController
 class PostController(private val postService: PostService) {
 
     @GetMapping("/posts")
-    fun list(pageable: Pageable, userId:String, projectId: Long): PostResponse {
-        return postService.findList(pageable, userId, projectId)
-    }
+    fun list(pageable: Pageable, userId:String, projectId: Long): PostResponse = postService.findList(pageable, userId, projectId)
+
 }
