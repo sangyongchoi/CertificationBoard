@@ -4,7 +4,10 @@ import com.example.certificationboard.ControllerTest;
 import com.example.certificationboard.TestUtil;
 import com.example.certificationboard.member.application.MemberService;
 import com.example.certificationboard.member.domain.Member;
-import com.example.certificationboard.project.application.*;
+import com.example.certificationboard.project.application.ProjectCreateRequest;
+import com.example.certificationboard.project.application.ProjectInfo;
+import com.example.certificationboard.project.application.ProjectPageResponse;
+import com.example.certificationboard.project.application.ProjectService;
 import com.example.certificationboard.project.domain.Project;
 import com.example.certificationboard.security.filter.JWTFilter;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -26,7 +29,8 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -40,9 +44,6 @@ class ProjectControllerTest extends ControllerTest {
 
     @MockBean
     ProjectService projectService;
-
-    @MockBean
-    ProjectParticipantsService projectParticipantsService;
 
     @MockBean
     MemberService memberService;

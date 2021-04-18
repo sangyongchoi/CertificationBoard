@@ -73,14 +73,14 @@ class ProjectParticipantsServiceTest {
     public void find_project_participants() {
         // given
         final Project project = projectRepository.findById(1L).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 프로젝트입니다."));
-        final Member member = memberRepository.findById("csytest2").orElseThrow(() -> new IllegalArgumentException("잘못된 정보입니다."));
+        final Member member = memberRepository.findById("csytest1").orElseThrow(() -> new IllegalArgumentException("잘못된 정보입니다."));
         final ProjectParticipantsId projectParticipantsId = new ProjectParticipantsId(project, member);
 
         // when
         final ProjectParticipants participants = projectParticipantsService.findParticipants(projectParticipantsId);
 
         //then
-        assertEquals("csytest2", participants.getProjectParticipantsId().getMember().getId());
+        assertEquals("csytest1", participants.getProjectParticipantsId().getMember().getId());
         assertEquals(1, participants.getProjectParticipantsId().getProject().getId());
     }
 

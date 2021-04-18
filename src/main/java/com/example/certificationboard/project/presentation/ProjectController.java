@@ -16,12 +16,10 @@ import javax.validation.Valid;
 public class ProjectController {
 
     private final ProjectService projectService;
-    private final ProjectParticipantsService projectParticipantsService;
     private final MemberService memberService;
 
-    public ProjectController(ProjectService projectService, ProjectParticipantsService projectParticipantsService, MemberService memberService) {
+    public ProjectController(ProjectService projectService, MemberService memberService) {
         this.projectService = projectService;
-        this.projectParticipantsService = projectParticipantsService;
         this.memberService = memberService;
     }
 
