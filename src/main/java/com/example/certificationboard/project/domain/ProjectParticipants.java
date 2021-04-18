@@ -36,6 +36,10 @@ public class ProjectParticipants {
         isStatus = true;
     }
 
+    public void addFavorite(){
+        this.favorites = true;
+    }
+
     public enum Role{
         ADMIN
         , MEMBER

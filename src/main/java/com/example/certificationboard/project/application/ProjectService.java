@@ -44,5 +44,4 @@ public class ProjectService {
 
         return new ProjectPageResponse(hasNext, lists.getContent());
     }
-
 }

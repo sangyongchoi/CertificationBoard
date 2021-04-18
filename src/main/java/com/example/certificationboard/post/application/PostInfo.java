@@ -35,4 +35,14 @@ public class PostInfo {
     public Contents getContents() {
         return contents;
     }
+
+    @Override
+    public String toString() {
+        return "PostInfo{" +
+                "id=" + id +
+                ", projectId=" + projectId +
+                ", type=" + type +
+                ", contents=" + contents +
+                '}';
+    }
 }

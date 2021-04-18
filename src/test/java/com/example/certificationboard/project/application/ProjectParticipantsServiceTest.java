@@ -84,4 +84,20 @@ class ProjectParticipantsServiceTest {
         assertEquals(1, participants.getProjectParticipantsId().getProject().getId());
     }
 
+    @Test
+    @DisplayName("즐겨찾기 추가 테스트")
+    public void addFavorite() {
+        // given
+        final Project project = projectRepository.findById(1L).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 프로젝트입니다."));
+        final Member member = memberRepository.findById("csytest1").orElseThrow(() -> new IllegalArgumentException("잘못된 정보입니다."));
+        final ProjectParticipantsId projectParticipantsId = new ProjectParticipantsId(project, member);
+
+        // when
+        final ProjectParticipants projectParticipants = projectParticipantsService.addFavorite(projectParticipantsId);
+
+        //then
+        final ProjectParticipants participants = projectParticipantsService.findParticipants(projectParticipantsId);
+        assertTrue(participants.isFavorites());
+    }
+
 }

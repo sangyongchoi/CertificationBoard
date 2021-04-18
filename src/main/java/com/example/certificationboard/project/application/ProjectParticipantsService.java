@@ -29,12 +29,14 @@ public class ProjectParticipantsService {
         return projectParticipantsRepository.getOne(participantsId);
     }
 
-    public ProjectPageResponse list(Pageable pageable, boolean isFavorite) {
-        final Page<ProjectParticipants> findProject = projectParticipantsRepository.findAllByFavorites(pageable, isFavorite);
-        boolean hasNext = PageUtil.hasNext(findProject, pageable);
+    public ProjectParticipants addFavorite(ProjectParticipantsId participantsId){
+        final ProjectParticipants projectParticipants = projectParticipantsRepository.findById(participantsId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 값입니다."));
 
-        //return new ProjectPageResponse(hasNext, projectList);
-        return null;
+        projectParticipants.addFavorite();
+        projectParticipantsRepository.save(projectParticipants);
+
+        return projectParticipants;
     }
 
 }

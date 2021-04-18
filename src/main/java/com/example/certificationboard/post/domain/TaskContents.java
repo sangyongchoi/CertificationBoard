@@ -13,6 +13,18 @@ public class TaskContents implements Contents{
         this.endDate = endDate;
     }
 
+    public String getTitle() {
+        return title;
+    }
+
+    public LocalDateTime getStartDate() {
+        return startDate;
+    }
+
+    public LocalDateTime getEndDate() {
+        return endDate;
+    }
+
     @Override
     public String toString() {
         return "TaskContents{" +
