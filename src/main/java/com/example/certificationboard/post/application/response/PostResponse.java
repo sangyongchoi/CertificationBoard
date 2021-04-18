@@ -1,4 +1,6 @@
-package com.example.certificationboard.post.application;
+package com.example.certificationboard.post.application.response;
+
+import com.example.certificationboard.post.application.PostInfo;
 
 import java.util.List;
 

@@ -11,9 +11,7 @@ import javax.persistence.Embedded;
 import javax.persistence.Id;
 import java.time.LocalDateTime;
 
-@Builder
 @NoArgsConstructor
-@AllArgsConstructor
 @Document("post")
 public class Post {
 
@@ -30,6 +28,13 @@ public class Post {
     public enum Type {
         WRITTEN,
         TASK
+    }
+
+    public Post(Long projectId, String memberId, Type type, Contents contents){
+        this.projectId = projectId;
+        this.memberId = memberId;
+        this.type = type;
+        this.contents = contents;
     }
 
     public ObjectId getId() {

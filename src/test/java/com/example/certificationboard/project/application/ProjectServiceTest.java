@@ -1,5 +1,6 @@
 package com.example.certificationboard.project.application;
 
+import com.example.certificationboard.member.application.MemberService;
 import com.example.certificationboard.member.domain.Member;
 import com.example.certificationboard.member.domain.MemberRepository;
 import com.example.certificationboard.project.domain.*;
@@ -11,8 +12,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 //@ExtendWith(SpringExtension.class)
 //@DataJpaTest
@@ -32,13 +32,14 @@ class ProjectServiceTest {
     @Autowired
     MemberRepository memberRepository;
 
-    ProjectParticipantsService projectParticipantsService;
+    @Autowired
+    MemberService memberService;
+
     ProjectService projectService;
 
     @BeforeAll
     void setup(){
-        projectParticipantsService = new ProjectParticipantsService(projectParticipantsRepository);
-        projectService = new ProjectService(projectRepository, projectParticipantsService, projectQueryRepository);
+        projectService = new ProjectService(projectRepository, projectParticipantsRepository, projectQueryRepository);
 
         final Member member = new Member("csytest1", "csytest1", "csytest1", false);
         memberRepository.save(member);
@@ -98,17 +99,30 @@ class ProjectServiceTest {
     }
 
     @Test
-    @DisplayName("id로 프로젝트 조회 테스트")
-    @Order(5)
-    public void findById() {
+    @DisplayName("id로 프로젝트 존재 하는지")
+    @Order(6)
+    public void exists_project() {
         // given
         Long id = 1L;
 
         // when
-        final Project byId = projectService.findById(id);
+        boolean existsProject = projectService.existsProject(id);
 
         //then
-        assertEquals(1, byId.getId());
-        assertEquals("test1", byId.getTitle());
+        assertTrue(existsProject);
+    }
+
+    @Test
+    @DisplayName("id로 프로젝트 존재 하지 않는지")
+    @Order(6)
+    public void not_exists_project() {
+        // given
+        Long id = 1000L;
+
+        // when
+        boolean existsProject = projectService.existsProject(id);
+
+        //then
+        assertFalse(existsProject);
     }
 }

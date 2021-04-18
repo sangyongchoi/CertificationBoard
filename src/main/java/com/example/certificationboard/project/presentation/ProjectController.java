@@ -26,7 +26,7 @@ public class ProjectController {
     @PostMapping(value = "/project")
     public ProjectCreateResponse createProject(@RequestBody @Valid ProjectCreateRequest projectCreateRequest) {
         String userId = projectCreateRequest.getUserId();
-        final Member member = memberService.findMemberById(userId);
+        final Member member = memberService.findById(userId);
         final Project project = projectCreateRequest.toProjectEntity(member);
 
         final Long projectId = projectService.create(project, member);

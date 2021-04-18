@@ -19,7 +19,7 @@ public class MemberService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    public Member findMemberById(String id) {
+    public Member findById(String id) {
         return memberRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저입니다."));
     }
@@ -32,7 +32,7 @@ public class MemberService {
         return memberRepository.save(encryptPassword(member));
     }
 
-    public boolean isExistsMember(Member member) {
+    private boolean isExistsMember(Member member) {
         return memberRepository.findById(member.getId()).isPresent();
     }
 

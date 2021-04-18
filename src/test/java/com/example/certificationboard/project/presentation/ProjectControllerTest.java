@@ -56,7 +56,7 @@ class ProjectControllerTest extends ControllerTest {
         String userId = "csytest1";
         jwt = TestUtil.createToken();
         final Member member1 = new Member("csytest1", "csytest1", "test", false);
-        given(memberService.findMemberById(userId)).willReturn(member1);
+        given(memberService.findById(userId)).willReturn(member1);
         given(projectService.list(any(Pageable.class),anyString() ,any(boolean.class))).willReturn(findProjectList());
         given(projectService.create(any(Project.class), any(Member.class))).willReturn(1L);
     }

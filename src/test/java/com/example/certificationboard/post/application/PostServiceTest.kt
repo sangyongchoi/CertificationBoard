@@ -38,12 +38,10 @@ internal class PostServiceTest{
         val project = Project(savedMember.organizationId, savedMember.id, "test", "test")
         projectService.create(project, member)
 
-        val post = Post.builder()
-                .projectId(project.id)
-                .memberId(savedMember.id)
-                .type(Post.Type.TASK)
-                .contents(TaskContents("test", LocalDateTime.of(2021, 4, 10, 0, 0), LocalDateTime.of(2021, 4, 11, 23, 59)))
-                .build()
+        val post = Post(project.id
+                ,savedMember.id
+                ,Post.Type.TASK
+                ,TaskContents("test", LocalDateTime.of(2021, 4, 10, 0, 0), LocalDateTime.of(2021, 4, 11, 23, 59)))
 
         savedProject = project
 
@@ -54,7 +52,7 @@ internal class PostServiceTest{
     @DisplayName("ㅇㅇ")
     fun find_post_list(){
         val pageable = PageRequest.of(0, 20)
-        val findAll = postService.findList(pageable, userId, savedProject.id)
+        val findAll = postService.findList(pageable, savedProject.id, userId)
 
         findAll.postInfos.forEach{ print(it)}
     }

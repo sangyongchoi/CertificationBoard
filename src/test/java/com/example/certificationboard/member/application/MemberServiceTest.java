@@ -68,32 +68,4 @@ class MemberServiceTest {
         });
     }
 
-    @Test
-    @DisplayName("중복 ID 테스트 - 존재할 때")
-    public void duplicate_user_exists() {
-        // given
-        final String userId = "test1";
-        insertUser(userId);
-        Member member = new Member(userId, "test", "test", false);
-
-        // when
-        boolean isExists = memberService.isExistsMember(member);
-
-        // then
-        assertTrue(isExists);
-    }
-
-    @Test
-    @DisplayName("중복 ID 테스트 - 존재하지 않을 때")
-    public void duplicate_user_when_not_exists() {
-        // given
-        Member member1 = new Member("test2", "test", "test", false);
-
-        // when
-        boolean isExists = memberService.isExistsMember(member1);
-
-        // then
-        assertFalse(isExists);
-    }
-
 }

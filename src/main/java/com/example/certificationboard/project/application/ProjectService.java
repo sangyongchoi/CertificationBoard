@@ -13,12 +13,12 @@ import org.springframework.transaction.annotation.Transactional;
 public class ProjectService {
 
     private final ProjectRepository projectRepository;
-    private final ProjectParticipantsService projectParticipantsService;
+    private final ProjectParticipantsRepository projectParticipantsRepository;
     private final ProjectQueryRepository projectQueryRepository;
 
-    public ProjectService(ProjectRepository projectRepository, ProjectParticipantsService projectParticipantsService, ProjectQueryRepository projectQueryRepository) {
+    public ProjectService(ProjectRepository projectRepository, ProjectParticipantsRepository projectParticipantsRepository, ProjectQueryRepository projectQueryRepository) {
         this.projectRepository = projectRepository;
-        this.projectParticipantsService = projectParticipantsService;
+        this.projectParticipantsRepository = projectParticipantsRepository;
         this.projectQueryRepository = projectQueryRepository;
     }
 
@@ -28,14 +28,18 @@ public class ProjectService {
         final ProjectParticipantsId projectParticipantsId = new ProjectParticipantsId(createdProject, member);
         final ProjectParticipants projectParticipants = new ProjectParticipants(projectParticipantsId, ProjectParticipants.Role.ADMIN, false);
 
-        projectParticipantsService.join(projectParticipants);
+        projectParticipantsRepository.save(projectParticipants);
 
         return createdProject.getId();
     }
 
-    public Project findById(Long id){
-        return projectRepository.findById(id)
-                .orElseThrow(()-> new IllegalArgumentException("존재하지 않는 프로젝트입니다."));
+    public Project findById(Long projectId){
+        return projectRepository.findById(projectId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 프로젝트입니다."));
+    }
+
+    public boolean existsProject(Long id){
+        return projectRepository.existsById(id);
     }
 
     public ProjectPageResponse list(Pageable pageable, String memberId, boolean favorites){
