@@ -17,21 +17,13 @@ class PostService(
 ) {
 
     fun create(post: Post): ObjectId {
-        val isProjectParticipants = projectParticipantsService.isProjectParticipants(post.projectId, post.memberId)
-
-        if(!isProjectParticipants){
-            throw IllegalArgumentException("잘못된 인자입니다")
-        }
+        isProjectParticipants(post.projectId, post.memberId)
 
         return postRepository.save(post).id
     }
 
     fun findList(pageable:Pageable, projectId: Long, userId: String): PostResponse {
-        val isProjectParticipants = projectParticipantsService.isProjectParticipants(projectId, userId)
-
-        if(!isProjectParticipants){
-            throw IllegalArgumentException("잘못된 인자입니다")
-        }
+        isProjectParticipants(projectId, userId)
 
         val postPageInfo = postRepository.findAllByProjectId(pageable, projectId)
         val hasNext = PageUtil.hasNext(postPageInfo, pageable)
@@ -40,6 +32,10 @@ class PostService(
                 .collect(Collectors.toList())
 
         return PostResponse(hasNext, postList)
+    }
+
+    private fun isProjectParticipants(projectId: Long, userId: String) {
+        projectParticipantsService.isProjectParticipants(projectId, userId)
     }
 
 }

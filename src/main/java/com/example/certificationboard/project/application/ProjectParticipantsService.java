@@ -6,6 +6,7 @@ import com.example.certificationboard.project.domain.Project;
 import com.example.certificationboard.project.domain.ProjectParticipants;
 import com.example.certificationboard.project.domain.ProjectParticipantsId;
 import com.example.certificationboard.project.domain.ProjectParticipantsRepository;
+import com.example.certificationboard.project.exception.NotParticipantsException;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -39,12 +40,15 @@ public class ProjectParticipantsService {
                 .orElseThrow(()-> new IllegalArgumentException("존재하지 않는 값입니다."));
     }
 
-    public boolean isProjectParticipants(Long projectId, String userId){
+    public void isProjectParticipants(Long projectId, String userId){
         final Project project = projectService.findById(projectId);
         final Member member = memberService.findById(userId);
         final ProjectParticipantsId participantsId = new ProjectParticipantsId(project, member);
+        final boolean exists = projectParticipantsRepository.existsById(participantsId);
 
-        return projectParticipantsRepository.existsById(participantsId);
+        if(!exists){
+            throw new NotParticipantsException("프로젝트 참여자가 아닙니다.");
+        }
     }
 
 }

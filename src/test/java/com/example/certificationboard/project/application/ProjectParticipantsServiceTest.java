@@ -4,6 +4,7 @@ import com.example.certificationboard.member.application.MemberService;
 import com.example.certificationboard.member.domain.Member;
 import com.example.certificationboard.member.domain.MemberRepository;
 import com.example.certificationboard.project.domain.*;
+import com.example.certificationboard.project.exception.NotParticipantsException;
 import com.example.certificationboard.project.query.ProjectQueryRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -41,8 +42,9 @@ class ProjectParticipantsServiceTest {
 
     @BeforeEach
     void setup(){
-        projectParticipantsService = new ProjectParticipantsService(projectParticipantsRepository, projectService, memberService);
         projectService = new ProjectService(projectRepository, projectParticipantsRepository, projectQueryRepository);
+        projectParticipantsService = new ProjectParticipantsService(projectParticipantsRepository, projectService, memberService);
+
         final Member member = new Member("csytest1", "csytest1", "csytest1", false);
         final Member member2 = new Member("csytest2", "csytest1", "csytest1", false);
         memberRepository.save(member);
@@ -55,8 +57,34 @@ class ProjectParticipantsServiceTest {
     }
 
     @Test
-    @DisplayName("프로젝트 참여테스트")
+    @DisplayName("프로젝트 참여자일 때")
     @Order(1)
+    public void is_project_participants() {
+        // given
+        final Project project = projectRepository.findById(1L).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 프로젝트입니다."));
+        final Member member = memberRepository.findById("csytest1").orElseThrow(() -> new IllegalArgumentException("잘못된 정보입니다."));
+
+        // when
+        projectParticipantsService.isProjectParticipants(project.getId(), member.getId());
+    }
+
+    @Test
+    @DisplayName("프로젝트 참여자 아닐 때")
+    @Order(2)
+    public void not_project_participants() {
+        assertThrows(NotParticipantsException.class, () -> {
+            // given
+            final Project project = projectRepository.findById(1L).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 프로젝트입니다."));
+            final Member member = memberRepository.findById("csytest2").orElseThrow(() -> new IllegalArgumentException("잘못된 정보입니다."));
+
+            // when
+            projectParticipantsService.isProjectParticipants(project.getId(), member.getId());
+        });
+    }
+
+    @Test
+    @DisplayName("프로젝트 참여테스트")
+    @Order(3)
     public void project_participants_join_test() {
         // given
         final Project project = projectRepository.findById(1L).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 프로젝트입니다."));
@@ -73,7 +101,7 @@ class ProjectParticipantsServiceTest {
 
     @Test
     @DisplayName("프로젝트 참여자 조회 테스트")
-    @Order(2)
+    @Order(4)
     public void find_project_participants() {
         // given
         final Project project = projectRepository.findById(1L).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 프로젝트입니다."));
@@ -90,7 +118,7 @@ class ProjectParticipantsServiceTest {
 
     @Test
     @DisplayName("즐겨찾기 추가 테스트")
-    @Order(3)
+    @Order(5)
     public void addFavorite() {
         // given
         final Project project = projectRepository.findById(1L).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 프로젝트입니다."));
