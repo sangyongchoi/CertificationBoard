@@ -40,7 +40,7 @@ public class ProjectParticipantsService {
                 .orElseThrow(()-> new IllegalArgumentException("존재하지 않는 값입니다."));
     }
 
-    public void isProjectParticipants(Long projectId, String userId){
+    public void validateParticipants(Long projectId, String userId){
         final Project project = projectService.findById(projectId);
         final Member member = memberService.findById(userId);
         final ProjectParticipantsId participantsId = new ProjectParticipantsId(project, member);

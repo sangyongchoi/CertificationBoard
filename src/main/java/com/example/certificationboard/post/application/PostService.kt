@@ -17,13 +17,13 @@ class PostService(
 ) {
 
     fun create(post: Post): ObjectId {
-        isProjectParticipants(post.projectId, post.memberId)
+        validateProjectParticipants(post.projectId, post.memberId)
 
         return postRepository.save(post).id
     }
 
     fun findList(pageable:Pageable, projectId: Long, userId: String): PostResponse {
-        isProjectParticipants(projectId, userId)
+        validateProjectParticipants(projectId, userId)
 
         val postPageInfo = postRepository.findAllByProjectId(pageable, projectId)
         val hasNext = PageUtil.hasNext(postPageInfo, pageable)
@@ -34,8 +34,8 @@ class PostService(
         return PostResponse(hasNext, postList)
     }
 
-    private fun isProjectParticipants(projectId: Long, userId: String) {
-        projectParticipantsService.isProjectParticipants(projectId, userId)
+    private fun validateProjectParticipants(projectId: Long, userId: String) {
+        projectParticipantsService.validateParticipants(projectId, userId)
     }
 
 }

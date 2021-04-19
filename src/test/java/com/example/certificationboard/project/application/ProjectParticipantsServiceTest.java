@@ -65,7 +65,7 @@ class ProjectParticipantsServiceTest {
         final Member member = memberRepository.findById("csytest1").orElseThrow(() -> new IllegalArgumentException("잘못된 정보입니다."));
 
         // when
-        projectParticipantsService.isProjectParticipants(project.getId(), member.getId());
+        projectParticipantsService.validateParticipants(project.getId(), member.getId());
     }
 
     @Test
@@ -78,7 +78,7 @@ class ProjectParticipantsServiceTest {
             final Member member = memberRepository.findById("csytest2").orElseThrow(() -> new IllegalArgumentException("잘못된 정보입니다."));
 
             // when
-            projectParticipantsService.isProjectParticipants(project.getId(), member.getId());
+            projectParticipantsService.validateParticipants(project.getId(), member.getId());
         });
     }
 
