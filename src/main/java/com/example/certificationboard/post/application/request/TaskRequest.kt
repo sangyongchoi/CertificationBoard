@@ -10,9 +10,9 @@ import javax.validation.constraints.Positive
 data class TaskRequest(
         @field:NotBlank val title: String
         , @field:NotEmpty val taskStatus: String
-        , val startDate: LocalDateTime
-        , val endDate: LocalDateTime
-        , val managers: List<String>
+        , val startDate: LocalDateTime?
+        , val endDate: LocalDateTime?
+        , val managers: List<String>?
         , @field:NotBlank val userId: String
         , @field:Positive val projectId: Long
 ) {
