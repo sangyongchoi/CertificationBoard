@@ -1,4 +1,4 @@
-package com.example.certificationboard.post.application;
+package com.example.certificationboard.post.application.response;
 
 import com.example.certificationboard.post.domain.Contents;
 import com.example.certificationboard.post.domain.Post;

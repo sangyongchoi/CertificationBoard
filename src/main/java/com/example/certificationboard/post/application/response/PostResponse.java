@@ -1,7 +1,5 @@
 package com.example.certificationboard.post.application.response;
 
-import com.example.certificationboard.post.application.PostInfo;
-
 import java.util.List;
 
 public class PostResponse {
@@ -19,5 +17,13 @@ public class PostResponse {
 
     public List<PostInfo> getPostInfos() {
         return postInfos;
+    }
+
+    @Override
+    public String toString() {
+        return "PostResponse{" +
+                "hasNext=" + hasNext +
+                ", postInfos=" + postInfos +
+                '}';
     }
 }

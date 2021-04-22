@@ -7,5 +7,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface PostRepository extends MongoRepository<Post, String> {
-    Page<Post> findAllByProjectId(Pageable pageable, Long projectId);
+    Page<Post> findAllByProjectIdOrderByIdDesc(Pageable pageable, Long projectId);
 }

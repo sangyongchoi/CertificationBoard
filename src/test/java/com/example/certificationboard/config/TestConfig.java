@@ -18,6 +18,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -57,6 +58,11 @@ public class TestConfig {
     @Bean
     public MemberRepository memberRepository() {
         return new MemberRepository() {
+            @Override
+            public List<Member> findByIdIn(Collection<String> ids) {
+                return null;
+            }
+
             @Override
             public List<Member> findAll() {
                 return null;
