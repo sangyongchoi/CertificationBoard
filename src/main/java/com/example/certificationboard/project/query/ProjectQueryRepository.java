@@ -2,7 +2,7 @@ package com.example.certificationboard.project.query;
 
 import com.example.certificationboard.project.application.ProjectInfo;
 import com.example.certificationboard.project.domain.QProject;
-import com.example.certificationboard.project.domain.QProjectParticipants;
+import com.example.certificationboard.projectparticipants.domain.QProjectParticipants;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;

@@ -1,4 +1,4 @@
-package com.example.certificationboard.project.exception;
+package com.example.certificationboard.projectparticipants.exception;
 
 public class NotParticipantsException extends RuntimeException{
 

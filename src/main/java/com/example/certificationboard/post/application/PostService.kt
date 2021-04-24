@@ -10,7 +10,7 @@ import com.example.certificationboard.post.domain.Contents
 import com.example.certificationboard.post.domain.Post
 import com.example.certificationboard.post.domain.PostRepository
 import com.example.certificationboard.post.domain.TaskContents
-import com.example.certificationboard.project.application.ProjectParticipantsService
+import com.example.certificationboard.projectparticipants.application.ProjectParticipantsService
 import org.bson.types.ObjectId
 import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service

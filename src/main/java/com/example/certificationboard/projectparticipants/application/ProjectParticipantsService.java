@@ -1,13 +1,16 @@
-package com.example.certificationboard.project.application;
+package com.example.certificationboard.projectparticipants.application;
 
 import com.example.certificationboard.member.application.MemberService;
 import com.example.certificationboard.member.domain.Member;
+import com.example.certificationboard.project.application.ProjectService;
 import com.example.certificationboard.project.domain.Project;
-import com.example.certificationboard.project.domain.ProjectParticipants;
-import com.example.certificationboard.project.domain.ProjectParticipantsId;
-import com.example.certificationboard.project.domain.ProjectParticipantsRepository;
-import com.example.certificationboard.project.exception.NotParticipantsException;
+import com.example.certificationboard.projectparticipants.domain.ProjectParticipants;
+import com.example.certificationboard.projectparticipants.domain.ProjectParticipantsId;
+import com.example.certificationboard.projectparticipants.domain.ProjectParticipantsRepository;
+import com.example.certificationboard.projectparticipants.exception.NotParticipantsException;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class ProjectParticipantsService {
@@ -26,8 +29,12 @@ public class ProjectParticipantsService {
         return projectParticipantsRepository.save(participants);
     }
 
+    public List<ProjectParticipantsDto> getProjectParticipantsList(Long projectId){
+        return projectParticipantsRepository.findParticipantList(projectId);
+    }
+
     public ProjectParticipants addFavorite(ProjectParticipantsId participantsId){
-        final ProjectParticipants projectParticipants = findParticipants(participantsId);
+        final ProjectParticipants projectParticipants = getParticipants(participantsId);
 
         projectParticipants.addFavorite();
         projectParticipantsRepository.save(projectParticipants);
@@ -35,7 +42,7 @@ public class ProjectParticipantsService {
         return projectParticipants;
     }
 
-    public ProjectParticipants findParticipants(ProjectParticipantsId participantsId){
+    public ProjectParticipants getParticipants(ProjectParticipantsId participantsId){
         return projectParticipantsRepository.findById(participantsId)
                 .orElseThrow(()-> new IllegalArgumentException("존재하지 않는 값입니다."));
     }

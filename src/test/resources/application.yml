@@ -1,6 +1,6 @@
 spring:
   profiles:
-    active: dev
+    active: test
 
 ---
 
@@ -24,8 +24,8 @@ spring:
   mail:
     host: smtp.gmail.com
     port: 587
-    username: csy7792@gmail.com
-    password: "!Qtkddyd12"
+    username: 11111
+    password: 1234
     properties:
       mail:
         smtp:

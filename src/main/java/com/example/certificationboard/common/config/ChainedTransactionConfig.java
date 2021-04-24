@@ -7,8 +7,10 @@ import org.springframework.data.mongodb.MongoTransactionManager;
 import org.springframework.data.transaction.ChainedTransactionManager;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @Configuration
+@EnableTransactionManagement
 public class ChainedTransactionConfig {
 
     private final MongoTransactionManager mongoTransactionManager;

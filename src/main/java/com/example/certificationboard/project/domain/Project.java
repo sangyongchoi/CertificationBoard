@@ -6,7 +6,6 @@ import lombok.Getter;
 import javax.persistence.*;
 
 @Entity
-@Getter
 public class Project extends BaseTimeEntity {
 
     @Id
@@ -25,6 +24,26 @@ public class Project extends BaseTimeEntity {
         this.createdMemberId = createdMemberId;
         this.title = title;
         this.explain = explain;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public String getOrganizationId() {
+        return organizationId;
+    }
+
+    public String getCreatedMemberId() {
+        return createdMemberId;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public String getExplain() {
+        return explain;
     }
 
     @Override

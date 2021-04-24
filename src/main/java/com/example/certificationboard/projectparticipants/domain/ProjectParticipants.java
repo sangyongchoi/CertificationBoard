@@ -1,4 +1,4 @@
-package com.example.certificationboard.project.domain;
+package com.example.certificationboard.projectparticipants.domain;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -9,7 +9,6 @@ import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 
 @Entity
-@Getter
 @NoArgsConstructor
 public class ProjectParticipants {
 
@@ -43,5 +42,21 @@ public class ProjectParticipants {
     public enum Role{
         ADMIN
         , MEMBER
+    }
+
+    public ProjectParticipantsId getProjectParticipantsId() {
+        return projectParticipantsId;
+    }
+
+    public Boolean getStatus() {
+        return isStatus;
+    }
+
+    public boolean isFavorites() {
+        return favorites;
+    }
+
+    public Role getRole() {
+        return role;
     }
 }

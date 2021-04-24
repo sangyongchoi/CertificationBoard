@@ -19,7 +19,6 @@ import kotlin.test.assertFalse
 
 @SpringBootTest
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-//@Transactional
 internal open class PostServiceTest{
 
     @Autowired

@@ -7,6 +7,7 @@ import com.example.certificationboard.post.application.response.PostResponse
 import com.example.certificationboard.post.domain.Post
 import com.example.certificationboard.post.domain.PostRepository
 import com.example.certificationboard.post.domain.TaskContents
+import com.example.certificationboard.post.presentation.PostController
 import com.example.certificationboard.project.application.ProjectService
 import com.example.certificationboard.security.filter.JWTFilter
 import com.fasterxml.jackson.databind.ObjectMapper
@@ -77,7 +78,7 @@ internal class PostControllerTest: ControllerTest(){
     @DisplayName("토큰 누락 테스트")
     fun jwt_omission_test(){
         mockMvc
-                .perform(get("/posts")
+                .perform(get("/posts/1")
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON)
                         .param("page", "0")
@@ -93,12 +94,11 @@ internal class PostControllerTest: ControllerTest(){
         val userId = "csytest1"
 
         mockMvc
-                .perform(get("/posts")
+                .perform(get("/posts/1")
                         .header(JWTFilter.AUTH_HEADER_NAME, jwt)
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON)
                         .param("userId", userId)
-                        .param("projectId", "1")
                         .param("page", "0")
                         .param("size", "20")
                 )
