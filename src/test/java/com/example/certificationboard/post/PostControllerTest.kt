@@ -65,6 +65,8 @@ internal class PostControllerTest: ControllerTest(){
                 , LocalDateTime.of(2021, 4, 10, 0, 0)
                 , LocalDateTime.of(2021, 4, 11, 23, 59)
                 , managers
+                , TaskContents.Priority.NORMAL
+                , 0
         )
 
         postInfos.add(PostInfo(ObjectId.get(), 1L, Post.Type.TASK, taskContents))
@@ -109,7 +111,8 @@ internal class PostControllerTest: ControllerTest(){
     @Test
     @DisplayName("업무 등록하기")
     fun create_task(){
-        val testTaskRequest = TestTaskRequest("test", "REQUEST","2021-04-10T00:00:00", "2021-04-10T00:00:00", mutableListOf(), "csytest1", 1L)
+        val testTaskRequest = TestTaskRequest("test", "REQUEST","2021-04-10T00:00:00", "2021-04-10T00:00:00", mutableListOf(),
+                0, "NORMAL", "csytest1", 1L)
 
         mockMvc
                 .perform(post("/task")
@@ -125,7 +128,8 @@ internal class PostControllerTest: ControllerTest(){
     @Test
     @DisplayName("업무 등록하기 - 유저 ID 누락")
     fun create_task_omission_userid(){
-        val testTaskRequest = TestTaskRequest("test", "REQUEST","2021-04-10T00:00:00", "2021-04-10T00:00:00", mutableListOf(), "", 1L)
+        val testTaskRequest = TestTaskRequest("test", "REQUEST","2021-04-10T00:00:00", "2021-04-10T00:00:00", mutableListOf(),
+                0, "NORMAL","", 1L)
 
         mockMvc
                 .perform(post("/task")
@@ -141,7 +145,8 @@ internal class PostControllerTest: ControllerTest(){
     @Test
     @DisplayName("업무 등록하기 - 제목 누락")
     fun create_task_omission_title(){
-        val testTaskRequest = TestTaskRequest("", "REQUEST","2021-04-10T00:00:00", "2021-04-10T00:00:00", mutableListOf(), "csytest1", 1L)
+        val testTaskRequest = TestTaskRequest("", "REQUEST","2021-04-10T00:00:00", "2021-04-10T00:00:00", mutableListOf(),
+                0, "NORMAL","csytest1", 1L)
 
         mockMvc
                 .perform(post("/task")
@@ -157,7 +162,8 @@ internal class PostControllerTest: ControllerTest(){
     @Test
     @DisplayName("업무 등록하기 - 프로젝트ID 누락")
     fun create_task_omission_projectid(){
-        val testTaskRequest = TestTaskRequest("test", "REQUEST","2021-04-10T00:00:00", "2021-04-10T00:00:00", mutableListOf(), "csytest1", null)
+        val testTaskRequest = TestTaskRequest("test", "REQUEST","2021-04-10T00:00:00", "2021-04-10T00:00:00", mutableListOf(),
+                0, "NORMAL", "csytest1", null)
 
         mockMvc
                 .perform(post("/task")
@@ -173,7 +179,9 @@ internal class PostControllerTest: ControllerTest(){
     @Test
     @DisplayName("업무 등록하기 - 업무 상태 누락")
     fun create_task_omission_task_status(){
-        val testTaskRequest = TestTaskRequest("test", "","2021-04-10T00:00:00", "2021-04-10T00:00:00", mutableListOf(), "csytest1", 1L)
+        val testTaskRequest = TestTaskRequest("test", "","2021-04-10T00:00:00",
+                "2021-04-10T00:00:00", mutableListOf(),0, "NORMAL",
+                "csytest1", 1L)
 
         mockMvc
                 .perform(post("/task")
@@ -198,6 +206,8 @@ data class TestTaskRequest(
         , val startDate: String
         , val endDate: String
         , val managers: List<String>
+        , val progress: Int
+        , val priority: String
         , val userId: String
         , val projectId: Long?
 ) {

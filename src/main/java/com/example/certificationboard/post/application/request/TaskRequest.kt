@@ -13,6 +13,8 @@ data class TaskRequest(
         , val startDate: LocalDateTime?
         , val endDate: LocalDateTime?
         , val managers: List<String>?
+        , val progress: Int
+        , val priority: String
         , @field:NotBlank val userId: String
         , @field:Positive val projectId: Long
 ) {
@@ -21,7 +23,7 @@ data class TaskRequest(
         return Post(projectId
                 , userId
                 , Post.Type.TASK
-                , TaskContents(title, TaskContents.Status.valueOf(taskStatus), startDate, endDate, managers)
+                , TaskContents(title, TaskContents.Status.valueOf(taskStatus), startDate, endDate, managers, TaskContents.Priority.valueOf(priority), progress)
         )
     }
 }

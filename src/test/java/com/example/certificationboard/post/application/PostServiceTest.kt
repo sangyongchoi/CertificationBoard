@@ -46,6 +46,8 @@ internal open class PostServiceTest{
                 , LocalDateTime.of(2021, 4, 10, 0, 0)
                 , LocalDateTime.of(2021, 4, 11, 23, 59)
                 , listOf("csytest1")
+                , TaskContents.Priority.NORMAL
+                , 0
         )
 
         val taskContents1 = TaskContents(
@@ -54,6 +56,8 @@ internal open class PostServiceTest{
                 , LocalDateTime.of(2021, 4, 10, 0, 0)
                 , LocalDateTime.of(2021, 4, 11, 23, 59)
                 , listOf()
+                , TaskContents.Priority.EMERGENCY
+                , 20
         )
 
         val post = Post(project.id
@@ -77,6 +81,8 @@ internal open class PostServiceTest{
     fun find_post_list(){
         val pageable = PageRequest.of(0, 20)
         val findAll = postService.findList(pageable, savedProject.id, userId)
+
+        findAll.postInfos.forEach{ print(it)}
 
         assertFalse(findAll.isHasNext)
         assertEquals(2, findAll.postInfos.size)

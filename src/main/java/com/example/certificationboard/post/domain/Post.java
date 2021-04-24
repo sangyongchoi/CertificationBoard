@@ -1,7 +1,5 @@
 package com.example.certificationboard.post.domain;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.NoArgsConstructor;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.CreatedDate;
@@ -24,11 +22,6 @@ public class Post {
     private Contents contents;
     @CreatedDate
     private LocalDateTime createdAt;
-
-    public enum Type {
-        WRITTEN,
-        TASK
-    }
 
     public Post(Long projectId, String memberId, Type type, Contents contents){
         this.projectId = projectId;
@@ -68,5 +61,10 @@ public class Post {
                 ", type=" + type +
                 ", contents=" + contents +
                 '}';
+    }
+
+    public enum Type {
+        WRITTEN,
+        TASK
     }
 }

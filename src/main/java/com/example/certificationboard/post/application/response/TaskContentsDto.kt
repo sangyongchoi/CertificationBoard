@@ -10,6 +10,8 @@ data class TaskContentsDto(
         , val startDate: LocalDateTime? = null
         , val endDate: LocalDateTime? = null
         , val managers: List<ManagerInfo>
+        , var priority: TaskContents.Priority?
+        , var progress: Int?
 ): Contents {
     constructor(contents: TaskContents, managers: List<ManagerInfo>): this(
         contents.title
@@ -17,6 +19,8 @@ data class TaskContentsDto(
         , contents.startDate
         , contents.endDate
         , managers
+        , contents.priority ?: TaskContents.Priority.NORMAL
+        , contents.progress ?: 0
     )
 }
 
