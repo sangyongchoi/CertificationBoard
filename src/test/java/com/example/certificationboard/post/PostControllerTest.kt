@@ -274,7 +274,7 @@ internal class PostControllerTest: ControllerTest(){
     @DisplayName("업무 진척도 변경 테스트")
     fun change_task_progress_success(){
         `when`(postService.changeTaskContents(MockitoHelper.anyObject())).thenReturn(ObjectId())
-        val data = TaskProgressRequest("1231232133", 40)
+        val data = TaskProgressRequest("1231232133", "40")
 
         mockMvc
                 .perform(put("/task/progress")
@@ -291,7 +291,7 @@ internal class PostControllerTest: ControllerTest(){
     @DisplayName("업무 진척도 변경 테스트 - 최소값 미만")
     fun change_task_progress_wrong_min_value(){
         `when`(postService.changeTaskContents(MockitoHelper.anyObject())).thenReturn(ObjectId())
-        val data = TaskProgressRequest("1231232133", -1)
+        val data = TaskProgressRequest("1231232133", "-1")
 
         mockMvc
                 .perform(put("/task/progress")
@@ -308,7 +308,7 @@ internal class PostControllerTest: ControllerTest(){
     @DisplayName("업무 진척도 변경 테스트 - 최대값 초과")
     fun change_task_progress_wrong_max_value(){
         `when`(postService.changeTaskContents(MockitoHelper.anyObject())).thenReturn(ObjectId())
-        val data = TaskProgressRequest("1231232133", 101)
+        val data = TaskProgressRequest("1231232133", "101")
 
         mockMvc
                 .perform(put("/task/progress")

@@ -116,7 +116,7 @@ internal open class PostServiceTest{
     fun change_task_progress(){
         // given
         val postId = postRepository.findAll()[0]?.id.toString()
-        val progress = 40
+        val progress = "40"
         val taskStatusRequest = TaskProgressRequest(postId, progress)
         // then
         val changedPostId = postService.changeTaskContents(taskStatusRequest);

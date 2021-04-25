@@ -1,6 +1,6 @@
 package com.example.certificationboard.post.domain;
 
-import com.example.certificationboard.post.exception.NotSupportFunction;
+import com.example.certificationboard.post.exception.NotSupportFunctionException;
 import lombok.NoArgsConstructor;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.CreatedDate;
@@ -59,7 +59,7 @@ public class Post {
         if (contents instanceof TaskContents && Type.TASK.equals(type)) {
             this.contents = contents;
         } else {
-            throw new NotSupportFunction("업무기능에만 지원하는 기능입니다.");
+            throw new NotSupportFunctionException("업무기능에만 지원하는 기능입니다.");
         }
     }
 

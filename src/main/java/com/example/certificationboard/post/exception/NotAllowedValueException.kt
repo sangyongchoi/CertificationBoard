@@ -2,7 +2,7 @@ package com.example.certificationboard.post.exception
 
 import java.lang.RuntimeException
 
-class NotSupportFunction(
+class NotAllowedValueException (
         override val message: String
-): RuntimeException() {
+): RuntimeException(){
 }

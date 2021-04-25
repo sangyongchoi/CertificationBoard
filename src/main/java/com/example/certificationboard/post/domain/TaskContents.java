@@ -1,5 +1,7 @@
 package com.example.certificationboard.post.domain;
 
+import com.example.certificationboard.post.exception.NotAllowedValueException;
+
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import java.time.LocalDateTime;
@@ -18,6 +20,16 @@ public class TaskContents implements Contents{
     private Integer progress;
 
     public TaskContents(String title, Status taskStatus, LocalDateTime startDate, LocalDateTime endDate, List<String> managers, Priority priority, Integer progress) {
+        if (progress < 0 || progress > 100) {
+            throw new NotAllowedValueException("진척도는 0이상 100이하의 값만 가능합니다.");
+        }
+
+        if (startDate != null && endDate != null) {
+            if (startDate.compareTo(endDate) > 0) {
+                throw new NotAllowedValueException("시작일자는 종료일자 이후 날짜로 설정할 수 없습니다.");
+            }
+        }
+
         this.title = title;
         this.taskStatus = taskStatus;
         this.startDate = startDate;
