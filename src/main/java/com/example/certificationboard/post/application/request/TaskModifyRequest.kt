@@ -4,6 +4,8 @@ import com.example.certificationboard.post.domain.Contents
 import com.example.certificationboard.post.domain.TaskContents
 import com.example.certificationboard.post.exception.NotSupportFunctionException
 import java.time.LocalDateTime
+import javax.validation.constraints.Max
+import javax.validation.constraints.Min
 import javax.validation.constraints.NotEmpty
 
 abstract class TaskModifyRequest(
@@ -14,7 +16,7 @@ abstract class TaskModifyRequest(
 
 data class TaskProgressRequest(
         @field:NotEmpty override val postId: String
-        , @field:NotEmpty val progress: String
+        , @field:Min(0) @field:Max(100) val progress: Int
 ): TaskModifyRequest(postId) {
 
     override fun convertToTaskContents(taskContents: Contents): Contents {
@@ -26,7 +28,7 @@ data class TaskProgressRequest(
                     , taskContents.endDate
                     , taskContents.managers
                     , taskContents.priority
-                    , progress.toInt()
+                    , progress
             )
             else -> throw NotSupportFunctionException("게시물 타입이 업무에만 지원하는 기능입니다.")
         }
