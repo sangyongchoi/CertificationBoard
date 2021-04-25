@@ -5,7 +5,7 @@ import com.example.certificationboard.member.domain.MemberRepository
 import com.example.certificationboard.post.application.request.TaskModifyRequest
 import com.example.certificationboard.post.application.response.ManagerInfo
 import com.example.certificationboard.post.application.response.PostInfo
-import com.example.certificationboard.post.application.response.PostResponse
+import com.example.certificationboard.post.application.response.PostListResponse
 import com.example.certificationboard.post.application.response.TaskContentsDto
 import com.example.certificationboard.post.domain.Contents
 import com.example.certificationboard.post.domain.Post
@@ -29,7 +29,7 @@ class PostService(
         return postRepository.save(post).id
     }
 
-    fun findList(pageable:Pageable, projectId: Long, userId: String): PostResponse {
+    fun findList(pageable:Pageable, projectId: Long, userId: String): PostListResponse {
         validateProjectParticipants(projectId, userId)
 
         val postPageInfo = postRepository.findAllByProjectIdOrderByIdDesc(pageable, projectId)
@@ -37,7 +37,7 @@ class PostService(
         val managersInfo = getManagersInfo(content)
         val postList = content.map { PostInfo(it.id, it.projectId, it.type, getContents(it.contents, managersInfo)) }
 
-        return PostResponse(!postPageInfo.isLast, postList)
+        return PostListResponse(!postPageInfo.isLast, postList)
     }
 
     private fun validateProjectParticipants(projectId: Long, userId: String) {

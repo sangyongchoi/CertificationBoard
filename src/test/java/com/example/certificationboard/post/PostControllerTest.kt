@@ -6,7 +6,7 @@ import com.example.certificationboard.post.application.response.PostInfo
 import com.example.certificationboard.post.application.PostService
 import com.example.certificationboard.post.application.request.TaskProgressRequest
 import com.example.certificationboard.post.application.request.TaskStatusRequest
-import com.example.certificationboard.post.application.response.PostResponse
+import com.example.certificationboard.post.application.response.PostListResponse
 import com.example.certificationboard.post.domain.Post
 import com.example.certificationboard.post.domain.PostRepository
 import com.example.certificationboard.post.domain.TaskContents
@@ -19,7 +19,6 @@ import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
-import org.mockito.Mockito
 import org.mockito.Mockito.*
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
@@ -56,9 +55,10 @@ internal class PostControllerTest: ControllerTest(){
     @BeforeAll
     fun whenSetup(){
         `when`(postService.findList(MockitoHelper.anyObject(), anyLong(), anyString())).thenReturn(getDummyResponse())
+        `when`(postService.create(MockitoHelper.anyObject())).thenReturn(ObjectId())
     }
 
-    private fun getDummyResponse(): PostResponse {
+    private fun getDummyResponse(): PostListResponse {
         val hasNext = false
         val postInfos = mutableListOf<PostInfo>()
         val managers = mutableListOf<String>()
@@ -75,7 +75,7 @@ internal class PostControllerTest: ControllerTest(){
         postInfos.add(PostInfo(ObjectId.get(), 1L, Post.Type.TASK, taskContents))
         postInfos.add(PostInfo(ObjectId.get(), 1L, Post.Type.TASK, taskContents))
 
-        return PostResponse(hasNext, postInfos)
+        return PostListResponse(hasNext, postInfos)
     }
 
     @Test

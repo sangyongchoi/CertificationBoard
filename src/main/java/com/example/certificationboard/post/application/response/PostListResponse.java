@@ -2,11 +2,11 @@ package com.example.certificationboard.post.application.response;
 
 import java.util.List;
 
-public class PostResponse {
+public class PostListResponse {
     boolean hasNext;
     List<PostInfo> postInfos;
 
-    public PostResponse(boolean hasNext, List<PostInfo> postInfos) {
+    public PostListResponse(boolean hasNext, List<PostInfo> postInfos) {
         this.hasNext = hasNext;
         this.postInfos = postInfos;
     }
