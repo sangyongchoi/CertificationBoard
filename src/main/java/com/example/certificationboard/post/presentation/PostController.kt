@@ -4,6 +4,7 @@ import com.example.certificationboard.post.application.PostService
 import com.example.certificationboard.post.application.request.TaskProgressRequest
 import com.example.certificationboard.post.application.request.TaskRequest
 import com.example.certificationboard.post.application.request.TaskStatusRequest
+import com.example.certificationboard.post.application.response.PostCreatedResponse
 import com.example.certificationboard.post.application.response.PostListResponse
 import org.springframework.data.domain.Pageable
 import org.springframework.http.HttpStatus
@@ -20,9 +21,11 @@ class PostController(
     fun list(pageable: Pageable, userId:String,@PathVariable projectId: Long): PostListResponse = postService.findList(pageable, projectId, userId)
 
     @PostMapping("/task")
-    fun createTask(@RequestBody @Valid taskRequest:TaskRequest): String {
+    fun createTask(@RequestBody @Valid taskRequest:TaskRequest): PostCreatedResponse {
         val task = taskRequest.convertToPostEntity()
-        return postService.create(task).toString()
+        val postId = postService.create(task).toString()
+
+        return PostCreatedResponse(postId)
     }
 
     @PutMapping("/task/status")
