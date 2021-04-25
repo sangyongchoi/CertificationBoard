@@ -1,6 +1,7 @@
 package com.example.certificationboard.member.presentation;
 
 import com.example.certificationboard.ControllerTest;
+import com.example.certificationboard.config.MockitoHelper;
 import com.example.certificationboard.member.application.MemberRequest;
 import com.example.certificationboard.member.application.MemberService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -38,7 +39,7 @@ class MemberControllerTest extends ControllerTest {
     @BeforeEach
     void beforeSetup() {
         MemberRequest member = new MemberRequest("csytest11", "csytest", "csytest");
-        given(memberService.signUp(any())).willReturn(member.toMemberEntity());
+        given(memberService.signUp(MockitoHelper.INSTANCE.anyObject())).willReturn(member.toMemberEntity());
     }
 
     @Test

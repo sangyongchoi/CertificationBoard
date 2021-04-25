@@ -2,6 +2,7 @@ package com.example.certificationboard.post.application
 
 import com.example.certificationboard.member.domain.Member
 import com.example.certificationboard.member.domain.MemberRepository
+import com.example.certificationboard.post.application.request.TaskModifyRequest
 import com.example.certificationboard.post.application.response.ManagerInfo
 import com.example.certificationboard.post.application.response.PostInfo
 import com.example.certificationboard.post.application.response.PostResponse
@@ -66,5 +67,17 @@ class PostService(
             else -> contents
         }
     }
+
+    fun changeTaskContents(taskStatusRequest: TaskModifyRequest): ObjectId {
+        val post = findPostById(taskStatusRequest.postId)
+
+        val taskContents = taskStatusRequest.convertToTaskContents(post.contents)
+        post.changeTaskContents(taskContents)
+
+        return postRepository.save(post).id
+    }
+
+    private fun findPostById(postId: String) = postRepository.findById(postId)
+            .orElseThrow { IllegalArgumentException("존재하지 않는 게시물입니다.") }
 
 }

@@ -1,8 +1,10 @@
 package com.example.certificationboard.post
 
 import com.example.certificationboard.ControllerTest
+import com.example.certificationboard.config.MockitoHelper
 import com.example.certificationboard.post.application.response.PostInfo
 import com.example.certificationboard.post.application.PostService
+import com.example.certificationboard.post.application.request.TaskStatusRequest
 import com.example.certificationboard.post.application.response.PostResponse
 import com.example.certificationboard.post.domain.Post
 import com.example.certificationboard.post.domain.PostRepository
@@ -24,8 +26,7 @@ import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.data.jpa.mapping.JpaMetamodelMappingContext
 import org.springframework.http.MediaType
 import org.springframework.test.web.servlet.MockMvc
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers.print
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import java.time.LocalDateTime
@@ -53,7 +54,7 @@ internal class PostControllerTest: ControllerTest(){
 
     @BeforeAll
     fun whenSetup(){
-        `when`(postService.findList(any(), anyLong(), anyString())).thenReturn(getDummyResponse())
+        `when`(postService.findList(MockitoHelper.anyObject(), anyLong(), anyString())).thenReturn(getDummyResponse())
     }
 
     private fun getDummyResponse(): PostResponse {
@@ -194,10 +195,67 @@ internal class PostControllerTest: ControllerTest(){
                 .andExpect(status().isBadRequest)
     }
 
-    private fun <T> any(): T {
-        Mockito.any<T>()
-        return null as T
+    @Test
+    @DisplayName("업무상태 변경 테스트 - jwt 누락")
+    fun change_task_status_omission_jwt(){
+        mockMvc
+                .perform(put("/task/status")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON)
+                )
+                .andDo(print())
+                .andExpect(status().isUnauthorized)
     }
+
+    @Test
+    @DisplayName("업무상태 변경 테스트 - postId 누락")
+    fun change_task_status_omission_post_id(){
+        val data = TaskStatusRequest("", "REQUEST")
+
+        mockMvc
+                .perform(put("/task/status")
+                        .header(JWTFilter.AUTH_HEADER_NAME, jwt)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(data))
+                )
+                .andDo(print())
+                .andExpect(status().isBadRequest)
+    }
+
+    @Test
+    @DisplayName("업무상태 변경 테스트 - status 누락")
+    fun change_task_status_omission_status(){
+        val data = TaskStatusRequest("1231232133", "")
+
+        mockMvc
+                .perform(put("/task/status")
+                        .header(JWTFilter.AUTH_HEADER_NAME, jwt)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(data))
+                )
+                .andDo(print())
+                .andExpect(status().isBadRequest)
+    }
+
+    @Test
+    @DisplayName("업무상태 변경 테스트")
+    fun change_task_status_omission_success(){
+        `when`(postService.changeTaskContents(MockitoHelper.anyObject())).thenReturn(ObjectId())
+        val data = TaskStatusRequest("1231232133", "REQUEST")
+
+        mockMvc
+                .perform(put("/task/status")
+                        .header(JWTFilter.AUTH_HEADER_NAME, jwt)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(data))
+                )
+                .andDo(print())
+                .andExpect(status().isOk)
+    }
+
 }
 
 data class TestTaskRequest(

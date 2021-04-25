@@ -2,9 +2,12 @@ package com.example.certificationboard.post.application.response;
 
 import com.example.certificationboard.post.domain.Contents;
 import com.example.certificationboard.post.domain.Post;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import org.bson.types.ObjectId;
 
 public class PostInfo {
+    @JsonSerialize(using = ToStringSerializer.class)
     private ObjectId id;
     private Long projectId;
     private Post.Type type;
