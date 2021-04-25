@@ -2,6 +2,7 @@ package com.example.certificationboard.post.application
 
 import com.example.certificationboard.member.domain.Member
 import com.example.certificationboard.member.domain.MemberRepository
+import com.example.certificationboard.post.application.request.TaskProgressRequest
 import com.example.certificationboard.post.application.request.TaskStatusRequest
 import com.example.certificationboard.post.domain.Post
 import com.example.certificationboard.post.domain.PostRepository
@@ -105,6 +106,25 @@ internal open class PostServiceTest{
 
         assertEquals(TaskContents.Status.REQUEST, when (contents) {
             is TaskContents -> contents.taskStatus
+            else -> null
+        })
+    }
+
+    @Test
+    @DisplayName("업무 진척도 변경 테스트")
+    fun change_task_progress(){
+        // given
+        val postId = postRepository.findAll()[0]?.id.toString()
+        val progress = 40
+        val taskStatusRequest = TaskProgressRequest(postId, progress)
+        // then
+        val changedPostId = postService.changeTaskContents(taskStatusRequest);
+
+        // when
+        val contents = postRepository.findById(changedPostId.toString()).get().contents
+
+        assertEquals(40, when (contents) {
+            is TaskContents -> contents.progress
             else -> null
         })
     }

@@ -4,6 +4,7 @@ import com.example.certificationboard.ControllerTest
 import com.example.certificationboard.config.MockitoHelper
 import com.example.certificationboard.post.application.response.PostInfo
 import com.example.certificationboard.post.application.PostService
+import com.example.certificationboard.post.application.request.TaskProgressRequest
 import com.example.certificationboard.post.application.request.TaskStatusRequest
 import com.example.certificationboard.post.application.response.PostResponse
 import com.example.certificationboard.post.domain.Post
@@ -256,6 +257,68 @@ internal class PostControllerTest: ControllerTest(){
                 .andExpect(status().isOk)
     }
 
+    @Test
+    @DisplayName("업무 진척도 변경 테스트 - jwt 누락")
+    fun change_task_progress_omission_jwt(){
+        mockMvc
+                .perform(put("/task/progress")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON)
+                )
+                .andDo(print())
+                .andExpect(status().isUnauthorized)
+    }
+
+    @Test
+    @DisplayName("업무 진척도 변경 테스트")
+    fun change_task_progress_omission_success(){
+        `when`(postService.changeTaskContents(MockitoHelper.anyObject())).thenReturn(ObjectId())
+        val data = TaskProgressRequest("1231232133", 40)
+
+        mockMvc
+                .perform(put("/task/progress")
+                        .header(JWTFilter.AUTH_HEADER_NAME, jwt)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(data))
+                )
+                .andDo(print())
+                .andExpect(status().isOk)
+    }
+
+    @Test
+    @DisplayName("업무 진척도 변경 테스트 - 최소값 미만")
+    fun change_task_progress_wrong_min_value(){
+        `when`(postService.changeTaskContents(MockitoHelper.anyObject())).thenReturn(ObjectId())
+        val data = TaskProgressRequest("1231232133", -1)
+
+        mockMvc
+                .perform(put("/task/progress")
+                        .header(JWTFilter.AUTH_HEADER_NAME, jwt)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(data))
+                )
+                .andDo(print())
+                .andExpect(status().isBadRequest)
+    }
+
+    @Test
+    @DisplayName("업무 진척도 변경 테스트 - 최대값 초과")
+    fun change_task_progress_wrong_max_value(){
+        `when`(postService.changeTaskContents(MockitoHelper.anyObject())).thenReturn(ObjectId())
+        val data = TaskProgressRequest("1231232133", 101)
+
+        mockMvc
+                .perform(put("/task/progress")
+                        .header(JWTFilter.AUTH_HEADER_NAME, jwt)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(data))
+                )
+                .andDo(print())
+                .andExpect(status().isBadRequest)
+    }
 }
 
 data class TestTaskRequest(
