@@ -1,6 +1,7 @@
 package com.example.certificationboard.post.presentation
 
 import com.example.certificationboard.post.application.PostService
+import com.example.certificationboard.post.application.request.TaskDateRequest
 import com.example.certificationboard.post.application.request.TaskProgressRequest
 import com.example.certificationboard.post.application.request.TaskRequest
 import com.example.certificationboard.post.application.request.TaskStatusRequest
@@ -38,6 +39,13 @@ class PostController(
     @PutMapping("/task/progress")
     fun changeTaskProgress(@RequestBody @Valid taskProgressRequest: TaskProgressRequest): ResponseEntity<String> {
         postService.changeTaskContents(taskProgressRequest)
+
+        return ResponseEntity("success", HttpStatus.OK)
+    }
+
+    @PutMapping("/task/date")
+    fun changeTaskDate(@RequestBody @Valid taskDateRequest: TaskDateRequest): ResponseEntity<String> {
+        postService.changeTaskContents(taskDateRequest)
 
         return ResponseEntity("success", HttpStatus.OK)
     }

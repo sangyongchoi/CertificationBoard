@@ -2,6 +2,7 @@ package com.example.certificationboard.post.application
 
 import com.example.certificationboard.member.domain.Member
 import com.example.certificationboard.member.domain.MemberRepository
+import com.example.certificationboard.post.application.request.TaskDateRequest
 import com.example.certificationboard.post.application.request.TaskProgressRequest
 import com.example.certificationboard.post.application.request.TaskStatusRequest
 import com.example.certificationboard.post.domain.Post
@@ -125,6 +126,26 @@ internal open class PostServiceTest{
 
         assertEquals(40, when (contents) {
             is TaskContents -> contents.progress
+            else -> null
+        })
+    }
+
+    @Test
+    @DisplayName("업무 날짜 변경 테스트")
+    fun change_task_date(){
+        // given
+        val postId = postRepository.findAll()[0]?.id.toString()
+        val startDate = LocalDateTime.parse("2021-04-10T00:00:00")
+        val endDate = LocalDateTime.parse("2021-04-12T00:00:00")
+        val taskStatusRequest = TaskDateRequest(postId, startDate, endDate)
+        // then
+        val changedPostId = postService.changeTaskContents(taskStatusRequest);
+
+        // when
+        val contents = postRepository.findById(changedPostId.toString()).get().contents
+
+        assertEquals(endDate, when (contents) {
+            is TaskContents -> contents.endDate
             else -> null
         })
     }

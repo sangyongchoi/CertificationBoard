@@ -4,6 +4,7 @@ import com.example.certificationboard.ControllerTest
 import com.example.certificationboard.config.MockitoHelper
 import com.example.certificationboard.post.application.response.PostInfo
 import com.example.certificationboard.post.application.PostService
+import com.example.certificationboard.post.application.request.TaskDateRequest
 import com.example.certificationboard.post.application.request.TaskProgressRequest
 import com.example.certificationboard.post.application.request.TaskStatusRequest
 import com.example.certificationboard.post.application.response.PostListResponse
@@ -271,7 +272,7 @@ internal class PostControllerTest: ControllerTest(){
 
     @Test
     @DisplayName("업무 진척도 변경 테스트")
-    fun change_task_progress_omission_success(){
+    fun change_task_progress_success(){
         `when`(postService.changeTaskContents(MockitoHelper.anyObject())).thenReturn(ObjectId())
         val data = TaskProgressRequest("1231232133", 40)
 
@@ -318,6 +319,66 @@ internal class PostControllerTest: ControllerTest(){
                 )
                 .andDo(print())
                 .andExpect(status().isBadRequest)
+    }
+
+    @Test
+    @DisplayName("업무 날짜 변경 테스트 - jwt 누락")
+    fun change_task_date_omission_jwt(){
+        mockMvc
+                .perform(put("/task/progress")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON)
+                )
+                .andDo(print())
+                .andExpect(status().isUnauthorized)
+    }
+
+    @Test
+    @DisplayName("업무 날짜 변경 테스트 - 둘다 null")
+    fun change_task_date_success_all_null(){
+        val taskDateRequest = TaskDateRequest("123", null, null)
+
+        mockMvc
+                .perform(put("/task/progress")
+                        .header(JWTFilter.AUTH_HEADER_NAME, jwt)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(taskDateRequest))
+                )
+                .andDo(print())
+                .andExpect(status().isOk)
+    }
+
+    @Test
+    @DisplayName("업무 날짜 변경 테스트 - start date null")
+    fun change_task_date_success_start_date_null(){
+        val taskDateRequest = TaskDateRequest("123", null, LocalDateTime.parse("2021-04-10T00:00:00"))
+
+        mockMvc
+                .perform(put("/task/progress")
+                        .header(JWTFilter.AUTH_HEADER_NAME, jwt)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(taskDateRequest))
+                )
+                .andDo(print())
+                .andExpect(status().isOk)
+    }
+
+    @Test
+    @DisplayName("업무 날짜 변경 테스트 - end date null")
+    fun change_task_date_success_end_date_null(){
+        val taskDateRequest = TaskDateRequest("123", LocalDateTime.parse("2021-04-10T00:00:00"), null)
+
+        mockMvc
+                .perform(put("/task/progress")
+                        .header(JWTFilter.AUTH_HEADER_NAME, jwt)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(taskDateRequest))
+                )
+                .andDo(print())
+                .andExpect(status().isOk)
     }
 }
 
