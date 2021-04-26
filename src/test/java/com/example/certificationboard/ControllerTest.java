@@ -15,6 +15,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 @ExtendWith({SpringExtension.class})
 @Import({SecurityConfig.class, TestConfig.class})
 public class ControllerTest {
+
     @Autowired
     LoginAuthenticationProvider loginAuthenticationProvider;
 

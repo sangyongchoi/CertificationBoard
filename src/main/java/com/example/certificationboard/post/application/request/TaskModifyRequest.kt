@@ -2,6 +2,7 @@ package com.example.certificationboard.post.application.request
 
 import com.example.certificationboard.post.domain.Contents
 import com.example.certificationboard.post.domain.TaskContents
+import com.example.certificationboard.post.exception.NotAllowedValueException
 import com.example.certificationboard.post.exception.NotSupportFunctionException
 import java.time.LocalDateTime
 import javax.validation.constraints.Max
@@ -61,6 +62,14 @@ data class TaskDateRequest(
         , val startDate: LocalDateTime?
         , val endDate: LocalDateTime?
 ): TaskModifyRequest(postId) {
+
+    init {
+        if (startDate != null && endDate != null) {
+            if (startDate > endDate) {
+                throw NotAllowedValueException("시작일자는 종료일자보다 이후 날짜로 설정할 수 없습니다.")
+            }
+        }
+    }
 
     override fun convertToTaskContents(taskContents: Contents): Contents {
         return when (taskContents) {
