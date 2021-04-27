@@ -72,9 +72,9 @@ internal class PostControllerTest: ControllerTest(){
                 , 0
         )
 
-        postInfos.add(PostInfo(ObjectId.get(), 1L, Post.Type.TASK, taskContents))
-        postInfos.add(PostInfo(ObjectId.get(), 1L, Post.Type.TASK, taskContents))
-        postInfos.add(PostInfo(ObjectId.get(), 1L, Post.Type.TASK, taskContents))
+        postInfos.add(PostInfo(ObjectId.get(), 1L, "csytest", "최상용", Post.Type.TASK, taskContents))
+        postInfos.add(PostInfo(ObjectId.get(), 1L, "csytest", "최상용", Post.Type.TASK, taskContents))
+        postInfos.add(PostInfo(ObjectId.get(), 1L, "csytest", "최상용", Post.Type.TASK, taskContents))
 
         return PostListResponse(hasNext, postInfos)
     }

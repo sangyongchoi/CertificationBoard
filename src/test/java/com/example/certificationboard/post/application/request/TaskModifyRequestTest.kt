@@ -7,8 +7,13 @@ internal class TaskModifyRequestTest{
 
     @Test
     fun test(){
-        val taskModifyRequest: TaskModifyRequest = TaskStatusRequest("123123", "123123")
+        val of = setOf("1", "2", "3")
+        val of1 = setOf("2", "3", "4")
 
-        assertEquals("123123", taskModifyRequest.postId)
+        val plus = of.plus(of1)
+
+        for (e in plus) {
+            println(e)
+        }
     }
 }

@@ -10,15 +10,19 @@ public class PostInfo {
     @JsonSerialize(using = ToStringSerializer.class)
     private ObjectId id;
     private Long projectId;
+    private String writerId;
+    private String writerName;
     private Post.Type type;
     private Contents contents;
 
     public PostInfo() {
     }
 
-    public PostInfo(ObjectId id, Long projectId, Post.Type type, Contents contents) {
+    public PostInfo(ObjectId id, Long projectId, String writerId, String writerName, Post.Type type, Contents contents) {
         this.id = id;
         this.projectId = projectId;
+        this.writerId = writerId;
+        this.writerName = writerName;
         this.type = type;
         this.contents = contents;
     }
@@ -39,11 +43,21 @@ public class PostInfo {
         return contents;
     }
 
+    public String getWriterId() {
+        return writerId;
+    }
+
+    public String getWriterName() {
+        return writerName;
+    }
+
     @Override
     public String toString() {
         return "PostInfo{" +
                 "id=" + id +
                 ", projectId=" + projectId +
+                ", writerId='" + writerId + '\'' +
+                ", writerName='" + writerName + '\'' +
                 ", type=" + type +
                 ", contents=" + contents +
                 '}';

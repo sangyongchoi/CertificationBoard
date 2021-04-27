@@ -35,7 +35,7 @@ class PostService(
         val postPageInfo = postRepository.findAllByProjectIdOrderByIdDesc(pageable, projectId)
         val content = postPageInfo.content
         val managersInfo = getManagersInfo(content)
-        val postList = content.map { PostInfo(it.id, it.projectId, it.type, getContents(it.contents, managersInfo)) }
+        val postList = content.map { PostInfo(it.id, it.projectId,it.memberId, managersInfo.getValue(it.memberId), it.type, getContents(it.contents, managersInfo)) }
 
         return PostListResponse(!postPageInfo.isLast, postList)
     }
@@ -55,7 +55,12 @@ class PostService(
                 .flatMap { (it.contents as TaskContents).managers }
                 .toSet()
 
-        return memberRepository.findByIdIn(managersId)
+        val writersId = postList.map { it.memberId }
+            .toSet()
+
+        val memberIdSet = managersId.plus(writersId)
+
+        return memberRepository.findByIdIn(memberIdSet)
     }
 
     private fun getContents(contents: Contents, managersInfo: Map<String, String>): Contents{
