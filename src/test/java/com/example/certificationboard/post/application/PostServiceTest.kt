@@ -53,6 +53,7 @@ internal open class PostServiceTest{
             TaskContents.Priority.NORMAL,
             0,
             1
+            ,"test"
         )
 
         val taskContents1 = TaskContents(
@@ -64,6 +65,7 @@ internal open class PostServiceTest{
             TaskContents.Priority.EMERGENCY,
             20,
             2
+            ,"test"
         )
 
         val post = Post(project.id

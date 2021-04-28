@@ -76,6 +76,7 @@ internal class PostControllerTest: ControllerTest(){
             TaskContents.Priority.NORMAL,
             0,
             1
+            ,"test"
         )
 
         postInfos.add(PostInfo(ObjectId.get(), 1L, "csytest", "최상용", Post.Type.TASK, taskContents))

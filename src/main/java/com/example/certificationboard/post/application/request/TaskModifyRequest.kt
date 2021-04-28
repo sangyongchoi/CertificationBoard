@@ -23,14 +23,15 @@ data class TaskProgressRequest(
     override fun convertToTaskContents(taskContents: Contents): Contents {
         return when (taskContents) {
             is TaskContents -> TaskContents(
-                    taskContents.title
-                    , taskContents.taskStatus
-                    , taskContents.startDate
-                    , taskContents.endDate
-                    , taskContents.managers
-                    , taskContents.priority
-                    , progress
-                    ,taskContents.taskNumber
+                taskContents.title,
+                taskContents.taskStatus,
+                taskContents.startDate,
+                taskContents.endDate,
+                taskContents.managers,
+                taskContents.priority,
+                progress,
+                taskContents.taskNumber,
+                taskContents.context
             )
             else -> throw NotSupportFunctionException("게시물 타입이 업무에만 지원하는 기능입니다.")
         }
@@ -52,7 +53,8 @@ data class TaskStatusRequest(
                 taskContents.managers,
                 taskContents.priority,
                 taskContents.progress,
-                taskContents.taskNumber
+                taskContents.taskNumber,
+                taskContents.context
             )
             else -> throw NotSupportFunctionException("게시물 타입이 업무에만 지원하는 기능입니다.")
         }
@@ -83,7 +85,8 @@ data class TaskDateRequest(
                 taskContents.managers,
                 taskContents.priority,
                 taskContents.progress,
-                taskContents.taskNumber
+                taskContents.taskNumber,
+                taskContents.context
             )
             else -> throw NotSupportFunctionException("게시물 타입이 업무에만 지원하는 기능입니다.")
         }

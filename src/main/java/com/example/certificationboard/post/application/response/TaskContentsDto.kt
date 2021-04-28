@@ -13,16 +13,18 @@ data class TaskContentsDto(
         , var priority: TaskContents.Priority?
         , var progress: Int?
         , var taskNumber: Long
+        , var context: String
 ): Contents {
-    constructor(contents: TaskContents, managers: List<ManagerInfo>): this(
-        contents.title
-        , contents.taskStatus
-        , contents.startDate
-        , contents.endDate
-        , managers
-        , contents.priority ?: TaskContents.Priority.NORMAL
-        , contents.progress ?: 0
-        , contents.taskNumber
+    constructor(contents: TaskContents, managers: List<ManagerInfo>) : this(
+        contents.title,
+        contents.taskStatus,
+        contents.startDate,
+        contents.endDate,
+        managers,
+        contents.priority ?: TaskContents.Priority.NORMAL,
+        contents.progress ?: 0,
+        contents.taskNumber,
+        contents.context
     )
 }
 

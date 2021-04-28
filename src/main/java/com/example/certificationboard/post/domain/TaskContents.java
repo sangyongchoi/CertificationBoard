@@ -19,8 +19,11 @@ public class TaskContents implements Contents{
     private final Priority priority;
     private final Integer progress;
     private final Long taskNumber;
+    private final String context;
 
-    public TaskContents(String title, Status taskStatus, LocalDateTime startDate, LocalDateTime endDate, List<String> managers, Priority priority, Integer progress, Long taskNumber) {
+    public TaskContents(String title, Status taskStatus, LocalDateTime startDate
+            , LocalDateTime endDate, List<String> managers, Priority priority
+            , Integer progress, Long taskNumber, String context) {
         if (progress < 0 || progress > 100) {
             throw new NotAllowedValueException("진척도는 0이상 100이하의 값만 가능합니다.");
         }
@@ -39,6 +42,7 @@ public class TaskContents implements Contents{
         this.priority = priority;
         this.progress = progress;
         this.taskNumber = taskNumber;
+        this.context = context;
     }
 
     public String getTitle() {
@@ -73,6 +77,10 @@ public class TaskContents implements Contents{
         return taskNumber;
     }
 
+    public String getContext() {
+        return context;
+    }
+
     @Override
     public String toString() {
         return "TaskContents{" +
@@ -84,6 +92,7 @@ public class TaskContents implements Contents{
                 ", priority=" + priority +
                 ", progress=" + progress +
                 ", taskNumber=" + taskNumber +
+                ", context='" + context + '\'' +
                 '}';
     }
 

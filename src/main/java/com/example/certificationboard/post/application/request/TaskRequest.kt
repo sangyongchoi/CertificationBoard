@@ -17,13 +17,16 @@ data class TaskRequest(
         , val priority: String
         , @field:NotBlank val userId: String
         , @field:Positive val projectId: Long
+        , @field:NotBlank val context: String
 ) {
 
     fun convertToPostEntity(taskNumber: Long): Post{
         return Post(projectId
                 , userId
                 , Post.Type.TASK
-                , TaskContents(title, TaskContents.Status.valueOf(taskStatus), startDate, endDate, managers, TaskContents.Priority.valueOf(priority), progress, taskNumber)
+                , TaskContents(title, TaskContents.Status.valueOf(taskStatus)
+                , startDate, endDate, managers
+                , TaskContents.Priority.valueOf(priority), progress, taskNumber, context)
         )
     }
 }
