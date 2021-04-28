@@ -19,11 +19,11 @@ data class TaskRequest(
         , @field:Positive val projectId: Long
 ) {
 
-    fun convertToPostEntity(): Post{
+    fun convertToPostEntity(taskNumber: Long): Post{
         return Post(projectId
                 , userId
                 , Post.Type.TASK
-                , TaskContents(title, TaskContents.Status.valueOf(taskStatus), startDate, endDate, managers, TaskContents.Priority.valueOf(priority), progress)
+                , TaskContents(title, TaskContents.Status.valueOf(taskStatus), startDate, endDate, managers, TaskContents.Priority.valueOf(priority), progress, taskNumber)
         )
     }
 }

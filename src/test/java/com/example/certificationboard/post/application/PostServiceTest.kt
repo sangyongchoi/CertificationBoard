@@ -45,23 +45,25 @@ internal open class PostServiceTest{
         val project = Project(savedMember.organizationId, savedMember.id, "test", "test")
         projectService.create(project, member)
         val taskContents = TaskContents(
-                "test"
-                , TaskContents.Status.REQUEST
-                , LocalDateTime.of(2021, 4, 10, 0, 0)
-                , LocalDateTime.of(2021, 4, 11, 23, 59)
-                , listOf("csytest1")
-                , TaskContents.Priority.NORMAL
-                , 0
+            "test",
+            TaskContents.Status.REQUEST,
+            LocalDateTime.of(2021, 4, 10, 0, 0),
+            LocalDateTime.of(2021, 4, 11, 23, 59),
+            listOf("csytest1"),
+            TaskContents.Priority.NORMAL,
+            0,
+            1
         )
 
         val taskContents1 = TaskContents(
-                "test"
-                , TaskContents.Status.REQUEST
-                , LocalDateTime.of(2021, 4, 10, 0, 0)
-                , LocalDateTime.of(2021, 4, 11, 23, 59)
-                , listOf()
-                , TaskContents.Priority.EMERGENCY
-                , 20
+            "test",
+            TaskContents.Status.REQUEST,
+            LocalDateTime.of(2021, 4, 10, 0, 0),
+            LocalDateTime.of(2021, 4, 11, 23, 59),
+            listOf(),
+            TaskContents.Priority.EMERGENCY,
+            20,
+            2
         )
 
         val post = Post(project.id

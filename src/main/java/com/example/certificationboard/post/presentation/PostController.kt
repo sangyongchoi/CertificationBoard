@@ -1,5 +1,6 @@
 package com.example.certificationboard.post.presentation
 
+import com.example.certificationboard.common.sequence.SequenceCreator
 import com.example.certificationboard.post.application.PostService
 import com.example.certificationboard.post.application.request.TaskDateRequest
 import com.example.certificationboard.post.application.request.TaskProgressRequest
@@ -16,6 +17,7 @@ import javax.validation.Valid
 @RestController
 class PostController(
         private val postService: PostService
+        , private val sequenceCreator: SequenceCreator
 ) {
 
     @GetMapping("/posts/{projectId}")
@@ -23,10 +25,11 @@ class PostController(
 
     @PostMapping("/task")
     fun createTask(@RequestBody @Valid taskRequest:TaskRequest): PostCreatedResponse {
-        val task = taskRequest.convertToPostEntity()
+        val taskNumber = sequenceCreator.create("taskSeq")
+        val task = taskRequest.convertToPostEntity(taskNumber)
         val postId = postService.create(task).toString()
 
-        return PostCreatedResponse(postId)
+        return PostCreatedResponse(postId, taskNumber)
     }
 
     @PutMapping("/task/status")

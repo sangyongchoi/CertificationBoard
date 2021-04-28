@@ -1,6 +1,7 @@
 package com.example.certificationboard.post
 
 import com.example.certificationboard.ControllerTest
+import com.example.certificationboard.common.sequence.SequenceCreator
 import com.example.certificationboard.config.MockitoHelper
 import com.example.certificationboard.post.application.PostService
 import com.example.certificationboard.post.application.request.TaskDateRequest
@@ -48,6 +49,9 @@ internal class PostControllerTest: ControllerTest(){
     lateinit var postService: PostService
 
     @MockBean
+    lateinit var sequenceCreator: SequenceCreator
+
+    @MockBean
     lateinit var projectService: ProjectService
 
     @MockBean
@@ -63,13 +67,15 @@ internal class PostControllerTest: ControllerTest(){
         val hasNext = false
         val postInfos = mutableListOf<PostInfo>()
         val managers = mutableListOf<String>()
-        val taskContents = TaskContents("test",
-                TaskContents.Status.REQUEST
-                , LocalDateTime.of(2021, 4, 10, 0, 0)
-                , LocalDateTime.of(2021, 4, 11, 23, 59)
-                , managers
-                , TaskContents.Priority.NORMAL
-                , 0
+        val taskContents = TaskContents(
+            "test",
+            TaskContents.Status.REQUEST,
+            LocalDateTime.of(2021, 4, 10, 0, 0),
+            LocalDateTime.of(2021, 4, 11, 23, 59),
+            managers,
+            TaskContents.Priority.NORMAL,
+            0,
+            1
         )
 
         postInfos.add(PostInfo(ObjectId.get(), 1L, "csytest", "최상용", Post.Type.TASK, taskContents))

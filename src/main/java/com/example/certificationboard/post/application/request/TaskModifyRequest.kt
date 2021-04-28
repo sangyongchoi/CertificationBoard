@@ -30,6 +30,7 @@ data class TaskProgressRequest(
                     , taskContents.managers
                     , taskContents.priority
                     , progress
+                    ,taskContents.taskNumber
             )
             else -> throw NotSupportFunctionException("게시물 타입이 업무에만 지원하는 기능입니다.")
         }
@@ -44,13 +45,14 @@ data class TaskStatusRequest(
     override fun convertToTaskContents(taskContents: Contents): Contents {
         return when (taskContents) {
             is TaskContents -> TaskContents(
-                    taskContents.title
-                    , TaskContents.Status.valueOf(status)
-                    , taskContents.startDate
-                    , taskContents.endDate
-                    , taskContents.managers
-                    , taskContents.priority
-                    , taskContents.progress
+                taskContents.title,
+                TaskContents.Status.valueOf(status),
+                taskContents.startDate,
+                taskContents.endDate,
+                taskContents.managers,
+                taskContents.priority,
+                taskContents.progress,
+                taskContents.taskNumber
             )
             else -> throw NotSupportFunctionException("게시물 타입이 업무에만 지원하는 기능입니다.")
         }
@@ -74,13 +76,14 @@ data class TaskDateRequest(
     override fun convertToTaskContents(taskContents: Contents): Contents {
         return when (taskContents) {
             is TaskContents -> TaskContents(
-                    taskContents.title
-                    , taskContents.taskStatus
-                    , startDate
-                    , endDate
-                    , taskContents.managers
-                    , taskContents.priority
-                    , taskContents.progress
+                taskContents.title,
+                taskContents.taskStatus,
+                startDate,
+                endDate,
+                taskContents.managers,
+                taskContents.priority,
+                taskContents.progress,
+                taskContents.taskNumber
             )
             else -> throw NotSupportFunctionException("게시물 타입이 업무에만 지원하는 기능입니다.")
         }

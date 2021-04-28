@@ -10,16 +10,17 @@ import java.util.List;
 
 public class TaskContents implements Contents{
 
-    private String title;
+    private final String title;
     @Enumerated(EnumType.STRING)
-    private Status taskStatus;
-    private LocalDateTime startDate;
-    private LocalDateTime endDate;
-    private List<String> managers;
-    private Priority priority;
-    private Integer progress;
+    private final Status taskStatus;
+    private final LocalDateTime startDate;
+    private final LocalDateTime endDate;
+    private final List<String> managers;
+    private final Priority priority;
+    private final Integer progress;
+    private final Long taskNumber;
 
-    public TaskContents(String title, Status taskStatus, LocalDateTime startDate, LocalDateTime endDate, List<String> managers, Priority priority, Integer progress) {
+    public TaskContents(String title, Status taskStatus, LocalDateTime startDate, LocalDateTime endDate, List<String> managers, Priority priority, Integer progress, Long taskNumber) {
         if (progress < 0 || progress > 100) {
             throw new NotAllowedValueException("진척도는 0이상 100이하의 값만 가능합니다.");
         }
@@ -37,6 +38,7 @@ public class TaskContents implements Contents{
         this.managers = managers == null ? new ArrayList<>() : managers;
         this.priority = priority;
         this.progress = progress;
+        this.taskNumber = taskNumber;
     }
 
     public String getTitle() {
@@ -67,6 +69,10 @@ public class TaskContents implements Contents{
         return progress;
     }
 
+    public Long getTaskNumber() {
+        return taskNumber;
+    }
+
     @Override
     public String toString() {
         return "TaskContents{" +
@@ -77,6 +83,7 @@ public class TaskContents implements Contents{
                 ", managers=" + managers +
                 ", priority=" + priority +
                 ", progress=" + progress +
+                ", taskNumber=" + taskNumber +
                 '}';
     }
 
