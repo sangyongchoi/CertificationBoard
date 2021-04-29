@@ -11,10 +11,12 @@ import com.example.certificationboard.post.domain.Contents
 import com.example.certificationboard.post.domain.Post
 import com.example.certificationboard.post.domain.PostRepository
 import com.example.certificationboard.post.domain.TaskContents
+import com.example.certificationboard.post.exception.UnauthorizedException
 import com.example.certificationboard.projectparticipants.application.ProjectParticipantsService
 import org.bson.types.ObjectId
 import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
+import org.springframework.web.client.HttpClientErrorException
 
 @Service
 class PostService(
@@ -27,6 +29,16 @@ class PostService(
         validateProjectParticipants(post.projectId, post.memberId)
 
         return postRepository.save(post).id
+    }
+
+    fun delete(postId: String, userId: String) {
+        val post = findPostById(postId)
+
+        if (post.memberId == userId) {
+            postRepository.deleteById(postId)
+        } else {
+            throw UnauthorizedException("권한이 존재하지 않습니다.")
+        }
     }
 
     fun findList(pageable:Pageable, projectId: Long, userId: String): PostListResponse {

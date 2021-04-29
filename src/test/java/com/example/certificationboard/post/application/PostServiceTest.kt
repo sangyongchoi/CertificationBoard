@@ -8,6 +8,7 @@ import com.example.certificationboard.post.application.request.TaskStatusRequest
 import com.example.certificationboard.post.domain.Post
 import com.example.certificationboard.post.domain.PostRepository
 import com.example.certificationboard.post.domain.TaskContents
+import com.example.certificationboard.post.exception.UnauthorizedException
 import com.example.certificationboard.project.application.ProjectService
 import com.example.certificationboard.project.domain.Project
 import org.junit.jupiter.api.*
@@ -37,6 +38,9 @@ internal open class PostServiceTest{
     private lateinit var savedProject: Project
 
     val userId = "csytest1"
+
+    private lateinit var savedPostId: String
+    private lateinit var savedPostId2: String
 
     @BeforeAll
     fun setup(){
@@ -80,12 +84,21 @@ internal open class PostServiceTest{
 
         savedProject = project
 
-        postService.create(post)
-        postService.create(post2)
+        savedPostId = postService.create(post).toString()
+        savedPostId2 = postService.create(post2).toString()
+    }
+
+    @AfterAll
+    fun after(){
+        // 데이터 삭제
+
+        postRepository.deleteById(savedPostId)
+        postRepository.deleteById(savedPostId2)
     }
 
     @Test
     @DisplayName("조회 테스트")
+    @Order(1)
     fun find_post_list(){
         val pageable = PageRequest.of(0, 20)
         val findAll = postService.findList(pageable, savedProject.id, userId)
@@ -98,6 +111,7 @@ internal open class PostServiceTest{
     
     @Test
     @DisplayName("업무상태 변경 테스트")
+    @Order(2)
     fun change_task_status(){
         // given
         val postId = postRepository.findAll()[0]?.id.toString()
@@ -117,6 +131,7 @@ internal open class PostServiceTest{
 
     @Test
     @DisplayName("업무 진척도 변경 테스트")
+    @Order(3)
     fun change_task_progress(){
         // given
         val postId = postRepository.findAll()[0]?.id.toString()
@@ -136,6 +151,7 @@ internal open class PostServiceTest{
 
     @Test
     @DisplayName("업무 날짜 변경 테스트")
+    @Order(4)
     fun change_task_date(){
         // given
         val postId = postRepository.findAll()[0]?.id.toString()
@@ -152,6 +168,35 @@ internal open class PostServiceTest{
             is TaskContents -> contents.endDate
             else -> null
         })
+    }
+
+    @Test
+    @DisplayName("포스트 삭제 실패 테스트")
+    @Order(5)
+    fun post_delete_fail(){
+        assertThrows<UnauthorizedException> {
+            // given
+            var postId = savedPostId
+            var userId = "csytest2"
+
+            // when
+            postService.delete(postId, userId)
+        }
+    }
+
+    @Test
+    @DisplayName("포스트 삭제 성공 테스트")
+    @Order(6)
+    fun post_delete_success(){
+        // given
+        var postId = savedPostId
+        var userId = "csytest1"
+
+        // when
+        postService.delete(postId, userId)
+
+        // then
+        // success
     }
 
 }

@@ -2,10 +2,7 @@ package com.example.certificationboard.post.presentation
 
 import com.example.certificationboard.common.sequence.SequenceCreator
 import com.example.certificationboard.post.application.PostService
-import com.example.certificationboard.post.application.request.TaskDateRequest
-import com.example.certificationboard.post.application.request.TaskProgressRequest
-import com.example.certificationboard.post.application.request.TaskRequest
-import com.example.certificationboard.post.application.request.TaskStatusRequest
+import com.example.certificationboard.post.application.request.*
 import com.example.certificationboard.post.application.response.PostCreatedResponse
 import com.example.certificationboard.post.application.response.PostListResponse
 import org.springframework.data.domain.Pageable
@@ -49,6 +46,13 @@ class PostController(
     @PutMapping("/task/date")
     fun changeTaskDate(@RequestBody @Valid taskDateRequest: TaskDateRequest): ResponseEntity<String> {
         postService.changeTaskContents(taskDateRequest)
+
+        return ResponseEntity("success", HttpStatus.OK)
+    }
+
+    @DeleteMapping("/post")
+    fun delete(@RequestBody @Valid postDeleteRequest: PostDeleteRequest): ResponseEntity<String> {
+        postService.delete(postDeleteRequest.postId, postDeleteRequest.userId)
 
         return ResponseEntity("success", HttpStatus.OK)
     }
