@@ -3,6 +3,7 @@ package com.example.certificationboard.post.application
 import com.example.certificationboard.member.domain.Member
 import com.example.certificationboard.member.domain.MemberRepository
 import com.example.certificationboard.post.application.request.TaskDateRequest
+import com.example.certificationboard.post.application.request.TaskModifyRequest
 import com.example.certificationboard.post.application.request.TaskProgressRequest
 import com.example.certificationboard.post.application.request.TaskStatusRequest
 import com.example.certificationboard.post.domain.Post
@@ -171,8 +172,42 @@ internal open class PostServiceTest{
     }
 
     @Test
-    @DisplayName("포스트 삭제 실패 테스트")
+    @DisplayName("업무 변경 테스트")
     @Order(5)
+    fun change_task(){
+        // given
+        val postId = postRepository.findAll()[0]?.id.toString()
+        val startDate = LocalDateTime.parse("2021-04-10T00:00:00")
+        val endDate = LocalDateTime.parse("2021-04-12T00:00:00")
+        val taskModifyRequest = TaskModifyRequest(
+            postId,
+            "modify",
+            "GOING",
+            startDate,
+            endDate,
+            null,
+            60,
+            "USUALLY",
+            "modify"
+        )
+
+        // then
+        val changedPostId = postService.changeTaskContents(taskModifyRequest);
+
+        // when
+        val contents = postRepository.findById(changedPostId.toString()).get().contents
+        val taskContents = contents as TaskContents
+
+        assertEquals("modify", taskContents.title)
+        assertEquals("modify", taskContents.context)
+        assertEquals(TaskContents.Status.GOING, taskContents.taskStatus)
+        assertEquals(TaskContents.Priority.USUALLY, taskContents.priority)
+        assertEquals(60, taskContents.progress)
+    }
+
+    @Test
+    @DisplayName("포스트 삭제 실패 테스트")
+    @Order(6)
     fun post_delete_fail(){
         assertThrows<UnauthorizedException> {
             // given
@@ -186,7 +221,7 @@ internal open class PostServiceTest{
 
     @Test
     @DisplayName("포스트 삭제 성공 테스트")
-    @Order(6)
+    @Order(7)
     fun post_delete_success(){
         // given
         var postId = savedPostId

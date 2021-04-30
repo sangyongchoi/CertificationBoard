@@ -3,7 +3,7 @@ package com.example.certificationboard.post.application.request
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 
-internal class TaskModifyRequestTest{
+internal class TaskRequestTest{
 
     @Test
     fun test(){

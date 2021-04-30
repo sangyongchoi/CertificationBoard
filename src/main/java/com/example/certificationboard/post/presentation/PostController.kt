@@ -21,12 +21,19 @@ class PostController(
     fun list(pageable: Pageable, userId:String,@PathVariable projectId: Long): PostListResponse = postService.findList(pageable, projectId, userId)
 
     @PostMapping("/task")
-    fun createTask(@RequestBody @Valid taskRequest:TaskRequest): PostCreatedResponse {
+    fun createTask(@RequestBody @Valid taskCreateRequest:TaskCreateRequest): PostCreatedResponse {
         val taskNumber = sequenceCreator.create("taskSeq")
-        val task = taskRequest.convertToPostEntity(taskNumber)
+        val task = taskCreateRequest.convertToPostEntity(taskNumber)
         val postId = postService.create(task).toString()
 
         return PostCreatedResponse(postId, taskNumber)
+    }
+
+    @PutMapping("/task")
+    fun modifyTask(@RequestBody @Valid taskModifyRequest: TaskModifyRequest): ResponseEntity<String> {
+        postService.changeTaskContents(taskModifyRequest)
+
+        return ResponseEntity("success", HttpStatus.OK)
     }
 
     @PutMapping("/task/status")

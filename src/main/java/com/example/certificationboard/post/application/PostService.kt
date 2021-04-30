@@ -2,7 +2,7 @@ package com.example.certificationboard.post.application
 
 import com.example.certificationboard.member.domain.Member
 import com.example.certificationboard.member.domain.MemberRepository
-import com.example.certificationboard.post.application.request.TaskModifyRequest
+import com.example.certificationboard.post.application.request.TaskRequest
 import com.example.certificationboard.post.application.response.ManagerInfo
 import com.example.certificationboard.post.application.response.PostInfo
 import com.example.certificationboard.post.application.response.PostListResponse
@@ -16,7 +16,6 @@ import com.example.certificationboard.projectparticipants.application.ProjectPar
 import org.bson.types.ObjectId
 import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
-import org.springframework.web.client.HttpClientErrorException
 
 @Service
 class PostService(
@@ -85,7 +84,7 @@ class PostService(
         }
     }
 
-    fun changeTaskContents(taskStatusRequest: TaskModifyRequest): ObjectId {
+    fun changeTaskContents(taskStatusRequest: TaskRequest): ObjectId {
         val post = findPostById(taskStatusRequest.postId)
 
         val taskContents = taskStatusRequest.convertToTaskContents(post.contents)
