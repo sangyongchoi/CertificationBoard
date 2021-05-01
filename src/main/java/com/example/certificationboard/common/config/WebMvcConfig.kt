@@ -4,7 +4,10 @@ import com.example.certificationboard.common.config.argument.resolver.AuthorizeA
 import org.springframework.context.annotation.Configuration
 import org.springframework.data.web.PageableHandlerMethodArgumentResolver
 import org.springframework.web.method.support.HandlerMethodArgumentResolver
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer
+
 
 @Configuration
 open class WebMvcConfig(
@@ -14,5 +17,11 @@ open class WebMvcConfig(
     override fun addArgumentResolvers(argumentResolvers: MutableList<HandlerMethodArgumentResolver>) {
         argumentResolvers.add(authorizeArgumentResolver)
         argumentResolvers.add(PageableHandlerMethodArgumentResolver());
+    }
+
+    override fun addResourceHandlers(registry: ResourceHandlerRegistry) {
+        registry.addResourceHandler("/static/**").addResourceLocations("classpath:/static/")
+        registry.addResourceHandler("swagger-ui.html").addResourceLocations("classpath:/META-INF/resources/")
+        registry.addResourceHandler("/webjars/**").addResourceLocations("classpath:/META-INF/resources/webjars/")
     }
 }
