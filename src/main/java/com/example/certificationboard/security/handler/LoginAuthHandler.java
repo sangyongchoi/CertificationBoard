@@ -30,7 +30,7 @@ public class LoginAuthHandler implements AuthenticationSuccessHandler {
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
         final Member user = (Member) authentication.getPrincipal();
-        Map<String, String> claim = getClaim();
+        Map<String, String> claim = getClaim(user);
         final String token = jwtGenerator.createToken(claim);
         LoginResponse loginResponse = new LoginResponse(user.getOrganizationId(), token);
 
@@ -38,9 +38,10 @@ public class LoginAuthHandler implements AuthenticationSuccessHandler {
         response.setStatus(HttpStatus.OK.value());
     }
 
-    private Map<String, String> getClaim() {
+    private Map<String, String> getClaim(Member user) {
         Map<String, String> claim = new HashMap<>();
         claim.put("key", UUID.randomUUID() + DateUtil.nowToString());
+        claim.put("userId", user.getId());
 
         return claim;
     }

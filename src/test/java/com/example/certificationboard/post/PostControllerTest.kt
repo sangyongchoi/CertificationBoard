@@ -122,7 +122,7 @@ internal class PostControllerTest: ControllerTest(){
     @DisplayName("업무 등록하기")
     fun create_task(){
         val testTaskRequest = TestTaskRequest("test", "REQUEST","2021-04-10T00:00:00", "2021-04-10T00:00:00", mutableListOf(),
-                0, "NORMAL", "csytest1", 1L)
+                0, "NORMAL", "csytest1", 1L, "test")
 
         mockMvc
                 .perform(post("/task")
@@ -139,7 +139,7 @@ internal class PostControllerTest: ControllerTest(){
     @DisplayName("업무 등록하기 - 유저 ID 누락")
     fun create_task_omission_userid(){
         val testTaskRequest = TestTaskRequest("test", "REQUEST","2021-04-10T00:00:00", "2021-04-10T00:00:00", mutableListOf(),
-                0, "NORMAL","", 1L)
+                0, "NORMAL","", 1L, "test")
 
         mockMvc
                 .perform(post("/task")
@@ -156,7 +156,7 @@ internal class PostControllerTest: ControllerTest(){
     @DisplayName("업무 등록하기 - 제목 누락")
     fun create_task_omission_title(){
         val testTaskRequest = TestTaskRequest("", "REQUEST","2021-04-10T00:00:00", "2021-04-10T00:00:00", mutableListOf(),
-                0, "NORMAL","csytest1", 1L)
+                0, "NORMAL","csytest1", 1L, "test")
 
         mockMvc
                 .perform(post("/task")
@@ -173,7 +173,7 @@ internal class PostControllerTest: ControllerTest(){
     @DisplayName("업무 등록하기 - 프로젝트ID 누락")
     fun create_task_omission_projectid(){
         val testTaskRequest = TestTaskRequest("test", "REQUEST","2021-04-10T00:00:00", "2021-04-10T00:00:00", mutableListOf(),
-                0, "NORMAL", "csytest1", null)
+                0, "NORMAL", "csytest1", null, "test")
 
         mockMvc
                 .perform(post("/task")
@@ -191,7 +191,7 @@ internal class PostControllerTest: ControllerTest(){
     fun create_task_omission_task_status(){
         val testTaskRequest = TestTaskRequest("test", "","2021-04-10T00:00:00",
                 "2021-04-10T00:00:00", mutableListOf(),0, "NORMAL",
-                "csytest1", 1L)
+                "csytest1", 1L, "test")
 
         mockMvc
                 .perform(post("/task")
@@ -415,6 +415,7 @@ data class TestTaskRequest(
         , val priority: String
         , val userId: String
         , val projectId: Long?
+        , val context: String
 ) {
 }
 

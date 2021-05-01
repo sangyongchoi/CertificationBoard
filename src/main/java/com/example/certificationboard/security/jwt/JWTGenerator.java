@@ -31,18 +31,14 @@ public class JWTGenerator {
     }
 
     public String authenticationVerify(String token) {
-        try {
-            final String[] tokenInfo = token.split(" ");
-            if(tokenInfo.length > 1){
-                token = tokenInfo[1];
-            }
-            final Map<String, Claim> tokenClaim = getTokenClaim(token);
-
-            tokenVerify(token);
-            return tokenClaim.get("key").asString();
-        } catch (JWTVerificationException e) {
-            throw e;
+        final String[] tokenInfo = token.split(" ");
+        if(tokenInfo.length > 1){
+            token = tokenInfo[1];
         }
+        final Map<String, Claim> tokenClaim = getTokenClaim(token);
+
+        tokenVerify(token);
+        return tokenClaim.get("userId").asString();
     }
 
     private void tokenVerify(String token){

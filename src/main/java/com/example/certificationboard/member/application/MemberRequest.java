@@ -14,6 +14,9 @@ public class MemberRequest {
     private String password;
     private String name;
 
+    public MemberRequest() {
+    }
+
     public MemberRequest(String id, String password, String name) {
         this.id = id;
         this.password = password;
