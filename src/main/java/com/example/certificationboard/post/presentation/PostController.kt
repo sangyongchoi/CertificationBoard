@@ -9,6 +9,8 @@ import org.springframework.data.domain.Pageable
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
+import java.time.Instant
+import java.time.ZoneId
 import javax.validation.Valid
 
 @RestController
@@ -24,9 +26,12 @@ class PostController(
     fun createTask(@RequestBody @Valid taskCreateRequest:TaskCreateRequest): PostCreatedResponse {
         val taskNumber = sequenceCreator.create("taskSeq")
         val task = taskCreateRequest.convertToPostEntity(taskNumber)
-        val postId = postService.create(task).toString()
+        val postId = postService.create(task)
+        val createdAt = Instant.ofEpochMilli(postId.date.time)
+            .atZone(ZoneId.systemDefault())
+            .toLocalDateTime()
 
-        return PostCreatedResponse(postId, taskNumber)
+        return PostCreatedResponse(postId.toString(), taskNumber, createdAt)
     }
 
     @PutMapping("/task")
