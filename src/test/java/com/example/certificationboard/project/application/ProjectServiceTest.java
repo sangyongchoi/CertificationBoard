@@ -42,7 +42,7 @@ class ProjectServiceTest {
 
     @BeforeAll
     void setup(){
-        projectService = new ProjectService(projectRepository, projectParticipantsRepository, projectQueryRepository);
+        projectService = new ProjectService(projectRepository, projectQueryRepository);
 
         final Member member = new Member("csytest1", "csytest1", "csytest1", false);
         memberRepository.save(member);
@@ -57,7 +57,7 @@ class ProjectServiceTest {
             ProjectCreateRequest projectCreateRequest = new ProjectCreateRequest(userId, "test" + i, "test");
             final Member member = memberRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("잘못된 정보입니다."));
             final Project project = projectCreateRequest.toProjectEntity(member);
-            Long id = projectService.create(project, member);
+            projectService.create(project);
 
         }
         projectRepository.flush();
@@ -88,17 +88,12 @@ class ProjectServiceTest {
         ProjectCreateRequest projectCreateRequest = new ProjectCreateRequest(userId, "test", "test");
         final Member member = memberRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("잘못된 정보입니다."));
         final Project project = projectCreateRequest.toProjectEntity(member);
-        final ProjectParticipantsId projectParticipantsId = new ProjectParticipantsId(project, member);
 
         // when
-        Long id = projectService.create(project, member);
-        final ProjectParticipants projectParticipants = projectParticipantsRepository.findById(projectParticipantsId)
-                .orElseThrow(() -> new IllegalArgumentException("잘못된 정보입니다"));
+        Project createdProject = projectService.create(project);
 
         //then
-        assertNotNull(id);
-        assertEquals(member.getId(), projectParticipants.getProjectParticipantsId().getMember().getId());
-        assertEquals(project.getId(), projectParticipants.getProjectParticipantsId().getProject().getId());
+        assertNotNull(createdProject.getId());
     }
 
     @Test

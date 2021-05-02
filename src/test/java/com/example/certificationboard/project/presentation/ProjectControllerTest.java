@@ -9,6 +9,8 @@ import com.example.certificationboard.project.application.ProjectInfo;
 import com.example.certificationboard.project.application.ProjectPageResponse;
 import com.example.certificationboard.project.application.ProjectService;
 import com.example.certificationboard.project.domain.Project;
+import com.example.certificationboard.projectparticipants.application.ProjectParticipantsService;
+import com.example.certificationboard.projectparticipants.domain.ProjectParticipantsRepository;
 import com.example.certificationboard.security.filter.JWTFilter;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
@@ -51,6 +53,12 @@ class ProjectControllerTest extends ControllerTest {
     @Autowired
     ObjectMapper objectMapper;
 
+    @MockBean
+    ProjectParticipantsService projectParticipantsService;
+
+    @MockBean
+    ProjectParticipantsRepository projectParticipantsRepository;
+
     @BeforeEach
     void beforeSetup() {
         String userId = "csytest1";
@@ -58,7 +66,7 @@ class ProjectControllerTest extends ControllerTest {
         final Member member1 = new Member("csytest1", "csytest1", "test", false);
         given(memberService.findById(userId)).willReturn(member1);
         given(projectService.list(any(Pageable.class),anyString() ,any(boolean.class))).willReturn(findProjectList());
-        given(projectService.create(any(Project.class), any(Member.class))).willReturn(1L);
+        given(projectService.create(any(Project.class))).willReturn(new Project());
     }
 
     private ProjectPageResponse findProjectList(){
@@ -88,8 +96,7 @@ class ProjectControllerTest extends ControllerTest {
                 )
                 .andDo(print())
                 //then
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.projectId").value(1L));
+                .andExpect(status().isOk());
     }
 
     @Test

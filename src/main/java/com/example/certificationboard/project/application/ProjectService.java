@@ -16,24 +16,16 @@ import org.springframework.transaction.annotation.Transactional;
 public class ProjectService {
 
     private final ProjectRepository projectRepository;
-    private final ProjectParticipantsRepository projectParticipantsRepository;
     private final ProjectQueryRepository projectQueryRepository;
 
-    public ProjectService(ProjectRepository projectRepository, ProjectParticipantsRepository projectParticipantsRepository, ProjectQueryRepository projectQueryRepository) {
+    public ProjectService(ProjectRepository projectRepository, ProjectQueryRepository projectQueryRepository) {
         this.projectRepository = projectRepository;
-        this.projectParticipantsRepository = projectParticipantsRepository;
         this.projectQueryRepository = projectQueryRepository;
     }
 
     @Transactional
-    public Long create(Project project, Member member) {
-        final Project createdProject = projectRepository.save(project);
-        final ProjectParticipantsId projectParticipantsId = new ProjectParticipantsId(createdProject, member);
-        final ProjectParticipants projectParticipants = new ProjectParticipants(projectParticipantsId, ProjectParticipants.Role.ADMIN, false);
-
-        projectParticipantsRepository.save(projectParticipants);
-
-        return createdProject.getId();
+    public Project create(Project project) {
+        return projectRepository.save(project);
     }
 
     public Project findById(Long projectId){

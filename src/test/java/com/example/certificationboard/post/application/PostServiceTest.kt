@@ -9,6 +9,9 @@ import com.example.certificationboard.post.domain.TaskContents
 import com.example.certificationboard.post.exception.UnauthorizedException
 import com.example.certificationboard.project.application.ProjectService
 import com.example.certificationboard.project.domain.Project
+import com.example.certificationboard.projectparticipants.application.ProjectParticipantsService
+import com.example.certificationboard.projectparticipants.domain.ProjectParticipants
+import com.example.certificationboard.projectparticipants.domain.ProjectParticipantsId
 import org.junit.jupiter.api.*
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
@@ -19,6 +22,7 @@ import kotlin.test.assertFalse
 
 @SpringBootTest
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
+@TestMethodOrder(MethodOrderer.OrderAnnotation::class)
 internal open class PostServiceTest{
 
     @Autowired
@@ -33,6 +37,9 @@ internal open class PostServiceTest{
     @Autowired
     lateinit var postService: PostService
 
+    @Autowired
+    lateinit var projectParticipantsService: ProjectParticipantsService
+
     private lateinit var savedProject: Project
 
     val userId = "csytest1"
@@ -45,7 +52,13 @@ internal open class PostServiceTest{
         val member = Member(userId, "csytest1", "test", false)
         val savedMember = memberRepository.save(member)
         val project = Project(savedMember.organizationId, savedMember.id, "test", "test")
-        projectService.create(project, member)
+        val createdProject = projectService.create(project)
+
+        val projectParticipantsId = ProjectParticipantsId(createdProject, member)
+        val projectParticipants = ProjectParticipants(projectParticipantsId, ProjectParticipants.Role.ADMIN, false)
+
+        projectParticipantsService.join(projectParticipants)
+
         val taskContents = TaskContents(
             "test",
             TaskContents.Status.REQUEST,
@@ -89,7 +102,6 @@ internal open class PostServiceTest{
     @AfterAll
     fun after(){
         // 데이터 삭제
-
         postRepository.deleteById(savedPostId)
         postRepository.deleteById(savedPostId2)
     }
@@ -251,5 +263,4 @@ internal open class PostServiceTest{
         // then
         // success
     }
-
 }

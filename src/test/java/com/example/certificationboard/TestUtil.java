@@ -15,6 +15,7 @@ public class TestUtil {
         JWTGenerator jwtGenerator = new JWTGenerator();
         Map<String, String> claim = new HashMap<>();
         claim.put("key", UUID.randomUUID() + DateUtil.nowToString());
+        claim.put("userId", "csytest1");
 
         return jwtGenerator.createToken(claim);
     }

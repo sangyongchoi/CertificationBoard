@@ -28,6 +28,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest
 @Rollback(value = false)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class ProjectParticipantsServiceTest {
 
     @Autowired
@@ -50,7 +51,7 @@ class ProjectParticipantsServiceTest {
 
     @BeforeAll
     void setup(){
-        projectService = new ProjectService(projectRepository, projectParticipantsRepository, projectQueryRepository);
+        projectService = new ProjectService(projectRepository, projectQueryRepository);
         projectParticipantsService = new ProjectParticipantsService(projectParticipantsRepository, projectService, memberService);
 
         final Member member = new Member("csytest1", "csytest1", "csytest1", false);
@@ -63,9 +64,13 @@ class ProjectParticipantsServiceTest {
         final String userId = "csytest1";
         ProjectCreateRequest projectCreateRequest = new ProjectCreateRequest(userId, "test1", "test");
         final Project project = projectCreateRequest.toProjectEntity(member);
-        Long id = projectService.create(project, member);
+        final Project createdProject = projectService.create(project);
 
-        final ProjectParticipantsId projectParticipantsId = new ProjectParticipantsId(project, member3);
+        final ProjectParticipantsId adminParticipants = new ProjectParticipantsId(createdProject, member);
+        projectParticipantsRepository.save(new ProjectParticipants(adminParticipants, ProjectParticipants.Role.ADMIN, false));
+        projectParticipantsRepository.flush();
+
+        final ProjectParticipantsId projectParticipantsId = new ProjectParticipantsId(createdProject, member3);
         projectParticipantsRepository.save(new ProjectParticipants(projectParticipantsId, ProjectParticipants.Role.MEMBER, false));
         projectParticipantsRepository.flush();
     }
