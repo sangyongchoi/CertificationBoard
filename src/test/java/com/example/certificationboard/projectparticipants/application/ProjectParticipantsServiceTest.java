@@ -17,7 +17,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.Rollback;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -158,6 +160,19 @@ class ProjectParticipantsServiceTest {
         //then
         final ProjectParticipants participants = projectParticipantsService.getParticipants(projectParticipantsId);
         assertTrue(participants.isFavorites());
+    }
+
+    @Test
+    @DisplayName("매니저 정보 가져오기")
+    public void get_managers_info() {
+        // given
+        List<String> managers = Arrays.asList("csytest1", "csytest2", "csytest3");
+
+        // when
+        final List<Member> managersInfo = projectParticipantsService.getManagersInfo(managers);
+
+        //then
+        assertEquals(3, managers.size());
     }
 
 }

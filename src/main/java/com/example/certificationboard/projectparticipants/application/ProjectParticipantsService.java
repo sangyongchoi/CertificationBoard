@@ -10,6 +10,7 @@ import com.example.certificationboard.projectparticipants.domain.ProjectParticip
 import com.example.certificationboard.projectparticipants.exception.NotParticipantsException;
 import org.springframework.stereotype.Service;
 
+import java.util.Collection;
 import java.util.List;
 
 @Service
@@ -58,4 +59,7 @@ public class ProjectParticipantsService {
         }
     }
 
+    public List<Member> getManagersInfo(Collection<String> usersId){
+        return memberService.getUsersInfo(usersId);
+    }
 }

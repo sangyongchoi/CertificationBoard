@@ -21,7 +21,6 @@ import org.springframework.stereotype.Service
 class PostService(
         private val postRepository: PostRepository
         , private val projectParticipantsService: ProjectParticipantsService
-        , private val memberRepository: MemberRepository
 ) {
 
     fun create(post: Post): ObjectId {
@@ -42,6 +41,7 @@ class PostService(
 
     fun findList(pageable:Pageable, projectId: Long, userId: String): PostListResponse {
         validateProjectParticipants(projectId, userId)
+
 
         val postPageInfo = postRepository.findAllByProjectIdOrderByIdDesc(pageable, projectId)
         val content = postPageInfo.content
@@ -69,9 +69,9 @@ class PostService(
         val writersId = postList.map { it.memberId }
             .toSet()
 
-        val memberIdSet = managersId.plus(writersId)
+        val usersId = managersId.plus(writersId)
 
-        return memberRepository.findByIdIn(memberIdSet)
+        return projectParticipantsService.getManagersInfo(usersId)
     }
 
     private fun getContents(contents: Contents, managersInfo: Map<String, String>): Contents{

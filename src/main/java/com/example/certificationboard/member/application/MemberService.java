@@ -6,6 +6,9 @@ import com.example.certificationboard.member.exception.DuplicateUserException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Collection;
+import java.util.List;
+
 import static com.example.certificationboard.member.exception.DuplicateUserException.DUPLICATED_USER_ID;
 
 @Service
@@ -30,6 +33,10 @@ public class MemberService {
         }
 
         return memberRepository.save(encryptPassword(member));
+    }
+
+    public List<Member> getUsersInfo(Collection<String> usersId){
+        return memberRepository.findByIdIn(usersId);
     }
 
     private boolean isExistsMember(Member member) {
