@@ -62,6 +62,13 @@ class PostController(
         return ResponseEntity("success", HttpStatus.OK)
     }
 
+    @PutMapping("/task/managers")
+    fun changeManagers(@RequestBody @Valid taskDateRequest: TaskManagerRequest): ResponseEntity<String> {
+        postService.changeTaskContents(taskDateRequest)
+
+        return ResponseEntity("success", HttpStatus.OK)
+    }
+
     @DeleteMapping("/post")
     fun delete(@RequestBody @Valid postDeleteRequest: PostDeleteRequest): ResponseEntity<String> {
         postService.delete(postDeleteRequest.postId, postDeleteRequest.userId)

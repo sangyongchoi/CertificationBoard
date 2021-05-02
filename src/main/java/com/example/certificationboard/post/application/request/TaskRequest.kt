@@ -13,6 +13,29 @@ abstract class TaskRequest(
     abstract fun convertToTaskContents(taskContents: Contents): Contents
 }
 
+data class TaskManagerRequest(
+    @field:NotEmpty override val postId: String
+    , val managers: List<String>? = null
+): TaskRequest(postId) {
+
+    override fun convertToTaskContents(taskContents: Contents): Contents {
+        return when (taskContents) {
+            is TaskContents -> TaskContents(
+                taskContents.title,
+                taskContents.taskStatus,
+                taskContents.startDate,
+                taskContents.endDate,
+                managers,
+                taskContents.priority,
+                taskContents.progress,
+                taskContents.taskNumber,
+                taskContents.context
+            )
+            else -> throw NotSupportFunctionException("게시물 타입이 업무에만 지원하는 기능입니다.")
+        }
+    }
+}
+
 data class TaskProgressRequest(
         @field:NotEmpty override val postId: String
         , @field:Min(0) @field:Max(100) val progress: Int
