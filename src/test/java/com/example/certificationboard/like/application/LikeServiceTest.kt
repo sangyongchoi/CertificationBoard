@@ -2,6 +2,7 @@ package com.example.certificationboard.like.application
 
 import com.example.certificationboard.common.exception.AlreadyRegisteredException
 import com.example.certificationboard.like.domain.Like
+import com.example.certificationboard.like.domain.LikeRepository
 import com.example.certificationboard.member.application.MemberService
 import com.example.certificationboard.member.domain.Member
 import com.example.certificationboard.post.application.PostService
@@ -40,18 +41,21 @@ internal class LikeServiceTest {
     @Autowired
     lateinit var postService: PostService
 
+    @Autowired
+    lateinit var likeRepository: LikeRepository
+
     lateinit var postId: ObjectId
 
     var projectId: Long = 0
 
     @BeforeAll
     fun setUp() {
-        val member = Member("csytest1", "testtest", "test", false)
-        val member2 = Member("csytest2", "testtest", "test", false)
+        val member = Member("liketest1", "testtest", "test", false)
+        val member2 = Member("liketest2", "testtest", "test", false)
         val signUp = memberService.signUp(member)
         memberService.signUp(member2)
 
-        val project = Project(signUp.organizationId, "csytest1", "test", "test")
+        val project = Project(signUp.organizationId, "liketest1", "test", "test")
         val create = projectService.create(project)
         projectId = create.id
 
@@ -80,14 +84,20 @@ internal class LikeServiceTest {
         postId = postService.create(post)
     }
 
+    @AfterAll
+    fun after(){
+        postService.delete(postId.toString(), "liketest1")
+        likeRepository.deleteAll()
+    }
+
     @Test
     @DisplayName("좋아요 삭제")
     @Order(1)
     fun delete(){
         // given
-        val like = Like(postId, "csytest1")
+        val like = Like(postId, "liketest1")
         val create = likeService.create(like, projectId)
-        val likeRequest = LikeRequest(projectId, postId.toString(), "csytest1")
+        val likeRequest = LikeRequest(projectId, postId.toString(), "liketest1")
         println(create)
         // when
         likeService.delete(likeRequest)
@@ -97,7 +107,7 @@ internal class LikeServiceTest {
     @DisplayName("좋아요 테스트")
     @Order(2)
     fun like() {
-        val like = Like(postId, "csytest1")
+        val like = Like(postId, "liketest1")
 
         val create = likeService.create(like, projectId)
 
@@ -109,7 +119,7 @@ internal class LikeServiceTest {
     @Order(3)
     fun like_already_registered() {
         assertThrows<AlreadyRegisteredException> {
-            val like = Like(postId, "csytest1")
+            val like = Like(postId, "liketest1")
 
             likeService.create(like, projectId)
             likeService.create(like, projectId)
@@ -121,7 +131,7 @@ internal class LikeServiceTest {
     @Order(4)
     fun like_not_participants() {
         assertThrows<NotParticipantsException> {
-            val like = Like(postId, "csytest2")
+            val like = Like(postId, "liketest2")
             val create = likeService.create(like, projectId)
         }
     }
