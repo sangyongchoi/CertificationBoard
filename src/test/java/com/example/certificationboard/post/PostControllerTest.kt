@@ -78,10 +78,23 @@ internal class PostControllerTest: ControllerTest(){
             1
             ,"test"
         )
+        val createdAt = LocalDateTime.of(2021, 4, 10, 0, 0)
 
-        postInfos.add(PostInfo(ObjectId.get(), 1L, "csytest", "최상용", Post.Type.TASK, taskContents))
-        postInfos.add(PostInfo(ObjectId.get(), 1L, "csytest", "최상용", Post.Type.TASK, taskContents))
-        postInfos.add(PostInfo(ObjectId.get(), 1L, "csytest", "최상용", Post.Type.TASK, taskContents))
+        postInfos.add(
+            PostInfo(
+                ObjectId.get(), 1L, "csytest", "최상용", Post.Type.TASK, taskContents, createdAt
+            )
+        )
+        postInfos.add(
+            PostInfo(
+                ObjectId.get(), 1L, "csytest", "최상용", Post.Type.TASK, taskContents, createdAt
+            )
+        )
+        postInfos.add(
+            PostInfo(
+                ObjectId.get(), 1L, "csytest", "최상용", Post.Type.TASK, taskContents,createdAt
+            )
+        )
 
         return PostListResponse(hasNext, postInfos)
     }

@@ -1,7 +1,6 @@
 package com.example.certificationboard.post.application
 
 import com.example.certificationboard.member.domain.Member
-import com.example.certificationboard.member.domain.MemberRepository
 import com.example.certificationboard.post.application.request.TaskRequest
 import com.example.certificationboard.post.application.response.ManagerInfo
 import com.example.certificationboard.post.application.response.PostInfo
@@ -32,11 +31,11 @@ class PostService(
     fun delete(postId: String, userId: String) {
         val post = findPostById(postId)
 
-        if (post.memberId == userId) {
-            postRepository.deleteById(postId)
-        } else {
+        if (!post.memberId.equals(userId)) {
             throw UnauthorizedException("권한이 존재하지 않습니다.")
         }
+
+        postRepository.deleteById(postId)
     }
 
     fun findList(pageable:Pageable, projectId: Long, userId: String): PostListResponse {
@@ -46,7 +45,16 @@ class PostService(
         val postPageInfo = postRepository.findAllByProjectIdOrderByIdDesc(pageable, projectId)
         val content = postPageInfo.content
         val managersInfo = getManagersInfo(content)
-        val postList = content.map { PostInfo(it.id, it.projectId,it.memberId, managersInfo.getValue(it.memberId), it.type, getContents(it.contents, managersInfo)) }
+        val postList = content.map {
+            PostInfo(
+                it.id,
+                it.projectId,
+                it.memberId,
+                managersInfo.getValue(it.memberId),
+                it.type,
+                getContents(it.contents, managersInfo),
+                it.createdAt
+            ) }
 
         return PostListResponse(!postPageInfo.isLast, postList)
     }
