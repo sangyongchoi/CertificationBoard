@@ -1,5 +1,6 @@
 package com.example.certificationboard.post.application
 
+import com.example.certificationboard.like.application.LikeInfo
 import com.example.certificationboard.member.domain.Member
 import com.example.certificationboard.post.application.request.TaskRequest
 import com.example.certificationboard.post.application.response.ManagerInfo
@@ -11,6 +12,7 @@ import com.example.certificationboard.post.domain.Post
 import com.example.certificationboard.post.domain.PostRepository
 import com.example.certificationboard.post.domain.TaskContents
 import com.example.certificationboard.post.exception.UnauthorizedException
+import com.example.certificationboard.post.query.PostCustomRepository
 import com.example.certificationboard.projectparticipants.application.ProjectParticipantsService
 import org.bson.types.ObjectId
 import org.springframework.data.domain.Pageable
@@ -20,6 +22,7 @@ import org.springframework.stereotype.Service
 class PostService(
         private val postRepository: PostRepository
         , private val projectParticipantsService: ProjectParticipantsService
+        , private val postCustomRepository: PostCustomRepository
 ) {
 
     fun create(post: Post): ObjectId {
@@ -41,8 +44,9 @@ class PostService(
     fun findList(pageable:Pageable, projectId: Long, userId: String): PostListResponse {
         validateProjectParticipants(projectId, userId)
 
+        val postPageInfo = postCustomRepository.findByProjectId(projectId, pageable)
 
-        val postPageInfo = postRepository.findAllByProjectIdOrderByIdDesc(pageable, projectId)
+        //val postPageInfo = postRepository.findAllByProjectIdOrderByIdDesc(pageable, projectId)
         val content = postPageInfo.content
         val managersInfo = getManagersInfo(content)
         val postList = content.map {
@@ -53,7 +57,8 @@ class PostService(
                 managersInfo.getValue(it.memberId),
                 it.type,
                 getContents(it.contents, managersInfo),
-                it.createdAt
+                it.createdAt,
+                it.likes.map { like -> LikeInfo(like.userId) }
             ) }
 
         return PostListResponse(!postPageInfo.isLast, postList)

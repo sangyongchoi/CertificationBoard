@@ -1,14 +1,18 @@
 package com.example.certificationboard.post.domain;
 
+import com.example.certificationboard.like.domain.Like;
 import com.example.certificationboard.post.exception.NotSupportFunctionException;
 import lombok.NoArgsConstructor;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import javax.persistence.Embedded;
 import javax.persistence.Id;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @NoArgsConstructor
 @Document("post")
@@ -19,6 +23,8 @@ public class Post {
     private Long projectId;
     private String memberId;
     private Type type;
+    @DBRef
+    private List<Like> likes = new ArrayList<>();
     @Embedded
     private Contents contents;
     @CreatedDate
@@ -55,6 +61,10 @@ public class Post {
         return createdAt;
     }
 
+    public List<Like> getLikes() {
+        return likes;
+    }
+
     public void changeTaskContents(Contents contents){
         if (contents instanceof TaskContents && Type.TASK.equals(type)) {
             this.contents = contents;
@@ -66,9 +76,13 @@ public class Post {
     @Override
     public String toString() {
         return "Post{" +
-                "id='" + id + '\'' +
+                "id=" + id +
+                ", projectId=" + projectId +
+                ", memberId='" + memberId + '\'' +
                 ", type=" + type +
+                ", likes=" + likes +
                 ", contents=" + contents +
+                ", createdAt=" + createdAt +
                 '}';
     }
 

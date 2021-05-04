@@ -82,17 +82,17 @@ internal class PostControllerTest: ControllerTest(){
 
         postInfos.add(
             PostInfo(
-                ObjectId.get(), 1L, "csytest", "최상용", Post.Type.TASK, taskContents, createdAt
+                ObjectId.get(), 1L, "csytest", "최상용", Post.Type.TASK, taskContents, createdAt, mutableListOf()
             )
         )
         postInfos.add(
             PostInfo(
-                ObjectId.get(), 1L, "csytest", "최상용", Post.Type.TASK, taskContents, createdAt
+                ObjectId.get(), 1L, "csytest", "최상용", Post.Type.TASK, taskContents, createdAt, mutableListOf()
             )
         )
         postInfos.add(
             PostInfo(
-                ObjectId.get(), 1L, "csytest", "최상용", Post.Type.TASK, taskContents,createdAt
+                ObjectId.get(), 1L, "csytest", "최상용", Post.Type.TASK, taskContents,createdAt, mutableListOf()
             )
         )
 
