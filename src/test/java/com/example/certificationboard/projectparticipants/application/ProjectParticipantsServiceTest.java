@@ -19,7 +19,6 @@ import org.springframework.test.annotation.Rollback;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -49,6 +48,8 @@ class ProjectParticipantsServiceTest {
     ProjectParticipantsService projectParticipantsService;
     ProjectService projectService;
 
+    Long projectId;
+
     @BeforeAll
     void setup(){
         projectService = new ProjectService(projectRepository, projectQueryRepository);
@@ -66,6 +67,8 @@ class ProjectParticipantsServiceTest {
         final Project project = projectCreateRequest.toProjectEntity(member);
         final Project createdProject = projectService.create(project);
 
+        projectId = createdProject.getId();
+
         final ProjectParticipantsId adminParticipants = new ProjectParticipantsId(createdProject, member);
         projectParticipantsRepository.save(new ProjectParticipants(adminParticipants, ProjectParticipants.Role.ADMIN, false));
         projectParticipantsRepository.flush();
@@ -80,7 +83,7 @@ class ProjectParticipantsServiceTest {
     @Order(1)
     public void is_project_participants() {
         // given
-        final Project project = projectRepository.findById(1L).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 프로젝트입니다."));
+        final Project project = projectRepository.findById(projectId).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 프로젝트입니다."));
         final Member member = memberRepository.findById("csytest1").orElseThrow(() -> new IllegalArgumentException("잘못된 정보입니다."));
 
         // when
@@ -138,7 +141,7 @@ class ProjectParticipantsServiceTest {
     @Order(5)
     public void find_project_participants() {
         // given
-        final Project project = projectRepository.findById(1L).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 프로젝트입니다."));
+        final Project project = projectRepository.findById(projectId).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 프로젝트입니다."));
         final Member member = memberRepository.findById("csytest1").orElseThrow(() -> new IllegalArgumentException("잘못된 정보입니다."));
         final ProjectParticipantsId projectParticipantsId = new ProjectParticipantsId(project, member);
 
@@ -155,7 +158,7 @@ class ProjectParticipantsServiceTest {
     @Order(6)
     public void addFavorite() {
         // given
-        final Project project = projectRepository.findById(1L).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 프로젝트입니다."));
+        final Project project = projectRepository.findById(projectId).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 프로젝트입니다."));
         final Member member = memberRepository.findById("csytest1").orElseThrow(() -> new IllegalArgumentException("잘못된 정보입니다."));
         final ProjectParticipantsId projectParticipantsId = new ProjectParticipantsId(project, member);
 
@@ -174,7 +177,7 @@ class ProjectParticipantsServiceTest {
         List<String> managers = Arrays.asList("csytest1", "csytest2", "csytest3");
 
         // when
-        final List<Member> managersInfo = projectParticipantsService.getManagersInfo(managers);
+        final List<Member> managersInfo = projectParticipantsService.getUsersInfo(managers);
 
         //then
         assertEquals(3, managers.size());

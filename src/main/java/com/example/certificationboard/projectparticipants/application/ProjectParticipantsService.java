@@ -59,7 +59,7 @@ public class ProjectParticipantsService {
         }
     }
 
-    public List<Member> getManagersInfo(Collection<String> usersId){
+    public List<Member> getUsersInfo(Collection<String> usersId){
         return memberService.getUsersInfo(usersId);
     }
 }

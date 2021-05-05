@@ -1,6 +1,7 @@
 package com.example.certificationboard.post.query;
 
 import com.example.certificationboard.post.domain.Post;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -23,15 +24,13 @@ public class PostCustomRepository {
     }
 
     public Page<Post> findByProjectId(Long projectId, Pageable pageable) {
-        final LookupOperation lookupOperation = LookupOperation.newLookup()
-                .from("like")
-                .localField("_id")
-                .foreignField("postId")
-                .as("likes");
+        final LookupOperation likesLookup = getLikeLookUpOperation();
+        LookupOperation replyLookup = getReplyLookUpOpertaion();
 
         final Aggregation aggregation = Aggregation.newAggregation(
                 Aggregation.match(Criteria.where("projectId").is(projectId)),
-                lookupOperation,
+                likesLookup,
+                replyLookup,
                 Aggregation.skip((long) pageable.getPageSize() * pageable.getPageNumber()),
                 Aggregation.limit(pageable.getPageSize()),
                 Aggregation.sort(Sort.by("_id").descending())
@@ -42,6 +41,22 @@ public class PostCustomRepository {
                 , pageable
                 ,() -> mongoTemplate.count(getCountQuery(projectId), Post.class)
         );
+    }
+
+    private LookupOperation getLikeLookUpOperation() {
+        return LookupOperation.newLookup()
+                .from("like")
+                .localField("_id")
+                .foreignField("postId")
+                .as("likes");
+    }
+
+    private LookupOperation getReplyLookUpOpertaion() {
+        return LookupOperation.newLookup()
+                .from("reply")
+                .localField("_id")
+                .foreignField("postId")
+                .as("replies");
     }
 
     private Query getCountQuery(Long projectId) {

@@ -14,6 +14,8 @@ import com.example.certificationboard.post.domain.TaskContents
 import com.example.certificationboard.post.exception.UnauthorizedException
 import com.example.certificationboard.post.query.PostCustomRepository
 import com.example.certificationboard.projectparticipants.application.ProjectParticipantsService
+import com.example.certificationboard.reply.application.ReplyInfo
+import com.example.certificationboard.reply.domain.Reply
 import org.bson.types.ObjectId
 import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
@@ -45,20 +47,19 @@ class PostService(
         validateProjectParticipants(projectId, userId)
 
         val postPageInfo = postCustomRepository.findByProjectId(projectId, pageable)
-
-        //val postPageInfo = postRepository.findAllByProjectIdOrderByIdDesc(pageable, projectId)
         val content = postPageInfo.content
-        val managersInfo = getManagersInfo(content)
+        val usersInfo = getUsersInfo(content)
         val postList = content.map {
             PostInfo(
                 it.id,
                 it.projectId,
                 it.memberId,
-                managersInfo.getValue(it.memberId),
+                usersInfo.getValue(it.memberId),
                 it.type,
-                getContents(it.contents, managersInfo),
+                getContents(it.contents, usersInfo),
                 it.createdAt,
-                it.likes.map { like -> LikeInfo(like.userId) }
+                it.likes.map { like -> LikeInfo(like.userId) },
+                getReplies(it.replies, usersInfo)
             ) }
 
         return PostListResponse(!postPageInfo.isLast, postList)
@@ -68,13 +69,13 @@ class PostService(
         projectParticipantsService.validateParticipants(projectId, userId)
     }
 
-    private fun getManagersInfo(postList: List<Post>): Map<String, String>{
-        val managers = getManagers(postList)
+    private fun getUsersInfo(postList: List<Post>): Map<String, String>{
+        val managers = getUsers(postList)
 
         return managers.map { it.id to it.name }.toMap()
     }
 
-    private fun getManagers(postList: List<Post>): List<Member>{
+    private fun getUsers(postList: List<Post>): List<Member>{
         val managersId = postList.filter { it.contents is TaskContents }
                 .flatMap { (it.contents as TaskContents).managers }
                 .toSet()
@@ -82,9 +83,13 @@ class PostService(
         val writersId = postList.map { it.memberId }
             .toSet()
 
-        val usersId = managersId.plus(writersId)
+        val replyWriters = postList.flatMap { post ->
+            post.replies.map { it.writerId }
+        }
 
-        return projectParticipantsService.getManagersInfo(usersId)
+        val usersId = managersId.plus(writersId).plus(replyWriters)
+
+        return projectParticipantsService.getUsersInfo(usersId)
     }
 
     private fun getContents(contents: Contents, managersInfo: Map<String, String>): Contents{
@@ -95,6 +100,10 @@ class PostService(
             }
             else -> contents
         }
+    }
+
+    private fun getReplies(replies: List<Reply>, managersInfo: Map<String, String>): List<ReplyInfo> {
+        return replies.map { ReplyInfo(it.id.toString(), it.writerId, managersInfo.getValue(it.writerId), it.contents, it.createdAt!!) }
     }
 
     fun changeTaskContents(taskStatusRequest: TaskRequest): ObjectId {

@@ -2,6 +2,7 @@ package com.example.certificationboard.post.domain;
 
 import com.example.certificationboard.like.domain.Like;
 import com.example.certificationboard.post.exception.NotSupportFunctionException;
+import com.example.certificationboard.reply.domain.Reply;
 import lombok.NoArgsConstructor;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.CreatedDate;
@@ -25,6 +26,8 @@ public class Post {
     private Type type;
     @DBRef
     private List<Like> likes = new ArrayList<>();
+    @DBRef
+    private List<Reply> replies = new ArrayList<>();
     @Embedded
     private Contents contents;
     @CreatedDate
@@ -65,6 +68,10 @@ public class Post {
         return likes;
     }
 
+    public List<Reply> getReplies() {
+        return replies;
+    }
+
     public void changeTaskContents(Contents contents){
         if (contents instanceof TaskContents && Type.TASK.equals(type)) {
             this.contents = contents;
@@ -81,6 +88,7 @@ public class Post {
                 ", memberId='" + memberId + '\'' +
                 ", type=" + type +
                 ", likes=" + likes +
+                ", replies=" + replies +
                 ", contents=" + contents +
                 ", createdAt=" + createdAt +
                 '}';

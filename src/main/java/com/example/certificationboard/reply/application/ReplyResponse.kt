@@ -9,3 +9,12 @@ data class ReplyResponse(
     val createdAt: LocalDateTime
 ) {
 }
+
+data class ReplyInfo(
+    val id: String,
+    val writerId: String,
+    val writerName: String,
+    val contents: String,
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss", timezone = "Asia/Seoul")
+    val createdAt: LocalDateTime
+)
