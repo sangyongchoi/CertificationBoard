@@ -13,3 +13,18 @@ data class ReplyRequest(
 
     fun convertToReplyEntity() = Reply(ObjectId(postId), userId, contents)
 }
+
+data class ReplyModifyRequest(
+    val projectId: Long,
+    @field:NotEmpty val replyId: String,
+    @field:NotEmpty val userId: String,
+    @field:NotEmpty val contents: String
+){
+}
+
+data class ReplyDeleteRequest(
+    val projectId: Long,
+    @field:NotEmpty val replyId: String,
+    @field:NotEmpty val userId: String,
+){
+}
