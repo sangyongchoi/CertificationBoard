@@ -4,6 +4,7 @@ import com.example.certificationboard.member.application.MemberService;
 import com.example.certificationboard.member.domain.Member;
 import com.example.certificationboard.member.domain.MemberRepository;
 import com.example.certificationboard.project.application.ProjectCreateRequest;
+import com.example.certificationboard.project.application.ProjectInviteRequest;
 import com.example.certificationboard.project.application.ProjectService;
 import com.example.certificationboard.project.domain.Project;
 import com.example.certificationboard.project.domain.ProjectRepository;
@@ -50,6 +51,10 @@ class ProjectParticipantsServiceTest {
 
     Long projectId;
 
+    String inviteeMemberId = "invitetest";
+
+    String notParticipantsId = "notParticipants";
+
     @BeforeAll
     void setup(){
         projectService = new ProjectService(projectRepository, projectQueryRepository);
@@ -58,9 +63,14 @@ class ProjectParticipantsServiceTest {
         final Member member = new Member("csytest1", "csytest1", "csytest1", false);
         final Member member2 = new Member("csytest2", "csytest1", "csytest2", false);
         final Member member3 = new Member("csytest3", "csytest1", "csytest3", false);
+        final Member inviteeMember = new Member(inviteeMemberId, "csytest1", "csytest3", false);
+        final Member notParticipants = new Member(notParticipantsId, "csytest1", "csytest3", false);
+
         memberRepository.save(member);
         memberRepository.save(member2);
         memberRepository.save(member3);
+        memberRepository.save(inviteeMember);
+        memberRepository.save(notParticipants);
 
         final String userId = "csytest1";
         ProjectCreateRequest projectCreateRequest = new ProjectCreateRequest(userId, "test1", "test");
@@ -126,13 +136,11 @@ class ProjectParticipantsServiceTest {
         final Project project = projectRepository.findById(1L).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 프로젝트입니다."));
         final Member member = memberRepository.findById("csytest2").orElseThrow(() -> new IllegalArgumentException("잘못된 정보입니다."));
         final ProjectParticipantsId projectParticipantsId = new ProjectParticipantsId(project, member);
-        final ProjectParticipants projectParticipants = new ProjectParticipants(projectParticipantsId, ProjectParticipants.Role.MEMBER, false);
 
         // when
-        final ProjectParticipants join = projectParticipantsService.join(projectParticipants);
+        final ProjectParticipants join = projectParticipantsService.join(projectParticipantsId, ProjectParticipants.Role.MEMBER);
 
         // then
-        assertEquals(projectParticipants.getProjectParticipantsId(), join.getProjectParticipantsId());
         assertEquals(join.getProjectParticipantsId().getMember().getId(), "csytest2");
     }
 
@@ -172,6 +180,7 @@ class ProjectParticipantsServiceTest {
 
     @Test
     @DisplayName("매니저 정보 가져오기")
+    @Order(7)
     public void get_managers_info() {
         // given
         List<String> managers = Arrays.asList("csytest1", "csytest2", "csytest3");
@@ -181,6 +190,26 @@ class ProjectParticipantsServiceTest {
 
         //then
         assertEquals(3, managers.size());
+    }
+
+    @Test
+    @DisplayName("프로젝트 초대 - 참여자가 아닌 사람이 초대했을 때")
+    @Order(8)
+    public void invite_project_fail() {
+        assertThrows(NotParticipantsException.class, () -> {
+            final ProjectInviteRequest inviteRequest = new ProjectInviteRequest(projectId, inviteeMemberId, notParticipantsId);
+            projectParticipantsService.invite(inviteRequest);
+        });
+    }
+
+    @Test
+    @DisplayName("프로젝트 초대")
+    @Order(9)
+    public void invite_project() {
+        final ProjectInviteRequest inviteRequest = new ProjectInviteRequest(projectId, inviteeMemberId, "csytest1");
+        projectParticipantsService.invite(inviteRequest);
+
+        // success
     }
 
 }

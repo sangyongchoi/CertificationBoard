@@ -70,14 +70,13 @@ internal class ReplyServiceTest {
         insertReply()
     }
 
-    fun insertParticipants(project: Project, member: Member) {
+    private fun insertParticipants(project: Project, member: Member) {
         val projectParticipantsId = ProjectParticipantsId(project, member)
-        val projectParticipants = ProjectParticipants(projectParticipantsId, ProjectParticipants.Role.ADMIN, false)
 
-        projectParticipantsService.join(projectParticipants)
+        projectParticipantsService.join(projectParticipantsId, ProjectParticipants.Role.ADMIN)
     }
 
-    fun insertTask(project: Project, savedMember: Member) {
+    private fun insertTask(project: Project, savedMember: Member) {
         val taskContents = TaskContents(
             "test",
             TaskContents.Status.REQUEST,
@@ -99,7 +98,7 @@ internal class ReplyServiceTest {
         savedPostId = postService.create(post).toString()
     }
 
-    fun insertReply() {
+    private fun insertReply() {
         val reply = replyRepository.save(Reply(ObjectId(savedPostId), userId, "test"))
         replyId = reply.id.toString()
     }

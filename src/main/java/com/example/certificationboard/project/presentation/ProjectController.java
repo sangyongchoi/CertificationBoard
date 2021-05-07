@@ -8,6 +8,7 @@ import com.example.certificationboard.projectparticipants.application.ProjectPar
 import com.example.certificationboard.projectparticipants.domain.ProjectParticipants;
 import com.example.certificationboard.projectparticipants.domain.ProjectParticipantsId;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -36,11 +37,17 @@ public class ProjectController {
 
         final Project createdProject = projectService.create(project);
         final ProjectParticipantsId projectParticipantsId = new ProjectParticipantsId(createdProject, member);
-        final ProjectParticipants projectParticipants = new ProjectParticipants(projectParticipantsId, ProjectParticipants.Role.ADMIN, false);
 
-        projectParticipantsService.join(projectParticipants);
+        projectParticipantsService.join(projectParticipantsId, ProjectParticipants.Role.ADMIN);
 
         return new ProjectCreateResponse(createdProject.getId());
+    }
+
+    @PostMapping(value = "/project/invite")
+    public ResponseEntity<String> invite(@RequestBody @Valid ProjectInviteRequest inviteRequest) {
+        projectParticipantsService.invite(inviteRequest);
+
+        return ResponseEntity.ok("success");
     }
 
     @GetMapping(value = "/normal")

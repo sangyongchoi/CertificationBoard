@@ -60,9 +60,8 @@ internal class LikeServiceTest {
         projectId = create.id
 
         val projectParticipantsId = ProjectParticipantsId(create, signUp)
-        val projectParticipants = ProjectParticipants(projectParticipantsId, ProjectParticipants.Role.ADMIN, false)
 
-        projectParticipantsService.join(projectParticipants)
+        projectParticipantsService.join(projectParticipantsId, ProjectParticipants.Role.ADMIN)
 
         val taskContents1 = TaskContents(
             "test",

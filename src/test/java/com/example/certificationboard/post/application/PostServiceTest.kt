@@ -55,9 +55,8 @@ internal open class PostServiceTest{
         val createdProject = projectService.create(project)
 
         val projectParticipantsId = ProjectParticipantsId(createdProject, member)
-        val projectParticipants = ProjectParticipants(projectParticipantsId, ProjectParticipants.Role.ADMIN, false)
 
-        projectParticipantsService.join(projectParticipants)
+        projectParticipantsService.join(projectParticipantsId, ProjectParticipants.Role.ADMIN)
 
         val taskContents = TaskContents(
             "test",

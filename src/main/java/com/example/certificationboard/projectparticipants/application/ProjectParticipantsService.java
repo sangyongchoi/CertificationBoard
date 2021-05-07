@@ -2,6 +2,7 @@ package com.example.certificationboard.projectparticipants.application;
 
 import com.example.certificationboard.member.application.MemberService;
 import com.example.certificationboard.member.domain.Member;
+import com.example.certificationboard.project.application.ProjectInviteRequest;
 import com.example.certificationboard.project.application.ProjectService;
 import com.example.certificationboard.project.domain.Project;
 import com.example.certificationboard.projectparticipants.domain.ProjectParticipants;
@@ -26,8 +27,23 @@ public class ProjectParticipantsService {
         this.memberService = memberService;
     }
 
-    public ProjectParticipants join(ProjectParticipants participants){
+    public ProjectParticipants join(ProjectParticipantsId participantsId, ProjectParticipants.Role role){
+        ProjectParticipants participants = new ProjectParticipants(participantsId, role, false);
         return projectParticipantsRepository.save(participants);
+    }
+
+    public void invite(ProjectInviteRequest inviteRequest) {
+        Long projectId = inviteRequest.getProjectId();
+        final String inviterId = inviteRequest.getInviterId();
+
+        validateParticipants(projectId, inviterId);
+
+        final String inviteeId = inviteRequest.getInviteeId();
+        final Project project = projectService.findById(projectId);
+        final Member member = memberService.findById(inviteeId);
+        ProjectParticipantsId participantId = new ProjectParticipantsId(project, member);
+
+        join(participantId, ProjectParticipants.Role.MEMBER);
     }
 
     public List<ProjectParticipantsDto> getProjectParticipantsList(Long projectId){
