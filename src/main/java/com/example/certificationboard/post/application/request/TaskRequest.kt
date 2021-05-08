@@ -120,13 +120,15 @@ data class TaskModifyRequest(
     , @field:NotEmpty val taskStatus: String
     , val startDate: LocalDateTime?
     , val endDate: LocalDateTime?
-    , val managers: List<String>?
+    , val managersInfo: List<ManagerInfo>?
     , val progress: Int
     , val priority: String
     , @field:NotBlank val context: String
 ): TaskRequest(postId) {
 
     override fun convertToTaskContents(taskContents: Contents): Contents {
+        val managers = managersInfo?.map { it.id }
+
         return when (taskContents) {
             is TaskContents -> TaskContents(
                 title,

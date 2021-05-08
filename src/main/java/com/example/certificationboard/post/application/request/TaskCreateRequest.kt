@@ -12,7 +12,7 @@ data class TaskCreateRequest(
         , @field:NotEmpty val taskStatus: String
         , val startDate: LocalDateTime?
         , val endDate: LocalDateTime?
-        , val managers: List<String>?
+        , val managersInfo: List<ManagerInfo>?
         , val progress: Int
         , val priority: String
         , @field:NotBlank val userId: String
@@ -21,6 +21,8 @@ data class TaskCreateRequest(
 ) {
 
     fun convertToPostEntity(taskNumber: Long): Post{
+        val managers = managersInfo?.map { it.id }
+
         return Post(projectId
                 , userId
                 , Post.Type.TASK
@@ -29,4 +31,10 @@ data class TaskCreateRequest(
                 , TaskContents.Priority.valueOf(priority), progress, taskNumber, context)
         )
     }
+}
+
+data class ManagerInfo(
+    val id: String,
+    val name: String
+){
 }
