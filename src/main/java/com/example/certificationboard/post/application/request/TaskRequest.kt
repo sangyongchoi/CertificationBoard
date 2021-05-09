@@ -15,10 +15,12 @@ abstract class TaskRequest(
 
 data class TaskManagerRequest(
     @field:NotEmpty override val postId: String
-    , val managers: List<String>? = null
+    , val managersInfo: List<ManagerInfo>? = null
 ): TaskRequest(postId) {
 
     override fun convertToTaskContents(taskContents: Contents): Contents {
+        val managers = managersInfo?.map{ it.id }
+
         return when (taskContents) {
             is TaskContents -> TaskContents(
                 taskContents.title,
