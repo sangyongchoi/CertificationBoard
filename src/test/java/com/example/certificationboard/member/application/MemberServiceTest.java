@@ -3,17 +3,13 @@ package com.example.certificationboard.member.application;
 import com.example.certificationboard.member.domain.Member;
 import com.example.certificationboard.member.domain.MemberRepository;
 import com.example.certificationboard.member.exception.DuplicateUserException;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Order;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.HashSet;
 import java.util.List;
@@ -22,6 +18,8 @@ import java.util.Set;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class MemberServiceTest {
 
     @Autowired
@@ -31,7 +29,7 @@ class MemberServiceTest {
 
     PasswordEncoder passwordEncoder;
 
-    @BeforeEach
+    @BeforeAll
     void setup(){
         passwordEncoder = new BCryptPasswordEncoder();
         memberService = new MemberService(memberRepository, passwordEncoder);
@@ -62,8 +60,19 @@ class MemberServiceTest {
     }
 
     @Test
-    @DisplayName("회원가입 테스트 - 성공 (비밀번호 암호화)")
+    @DisplayName("팀원 리스트 가져오기")
     @Order(2)
+    public void get_members() {
+        final Pageable pageable = PageRequest.of(0, 30);
+        MemberListResponse memberListResponse = memberService.getMembers(pageable);
+
+        assertEquals(1, memberListResponse.getMembersInfo().size());
+        assertFalse(memberListResponse.getHasNext());
+    }
+
+    @Test
+    @DisplayName("회원가입 테스트 - 성공 (비밀번호 암호화)")
+    @Order(3)
     public void signup_when_success() {
         // given
         String userId = "test";
@@ -79,7 +88,7 @@ class MemberServiceTest {
 
     @Test
     @DisplayName("회원가입 테스트 - 이미 유저가 존재할 때")
-    @Order(3)
+    @Order(4)
     public void signup_when_exists_user() {
         //when
         assertThrows(DuplicateUserException.class, () -> {

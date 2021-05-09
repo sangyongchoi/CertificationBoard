@@ -1,10 +1,12 @@
 package com.example.certificationboard.member.presentation;
 
 import com.example.certificationboard.common.config.argument.resolver.AuthUser;
+import com.example.certificationboard.member.application.MemberListResponse;
 import com.example.certificationboard.member.application.MemberRequest;
 import com.example.certificationboard.member.application.MemberResponse;
 import com.example.certificationboard.member.application.MemberService;
 import com.example.certificationboard.member.domain.Member;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -38,5 +40,10 @@ public class MemberController {
         String name = member.getName();
 
         return new ResponseEntity<>(new MemberResponse(userId, name), HttpStatus.OK);
+    }
+
+    @GetMapping("/members")
+    public MemberListResponse getMembers(Pageable pageable) {
+        return memberService.getMembers(pageable);
     }
 }
