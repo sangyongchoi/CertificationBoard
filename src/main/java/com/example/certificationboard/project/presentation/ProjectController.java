@@ -59,6 +59,10 @@ public class ProjectController {
 
     @GetMapping("/project/info/{projectId}")
     public ProjectInfoResponse getProjectInfo(@PathVariable("projectId") Long projectId) {
+        /*
+         * TODO
+         * 1) 참여자인지 아닌지 체크하는 로직 추가 예정
+         */
         final Project project = projectService.findById(projectId);
 
         return new ProjectInfoResponse(project.getTitle(), project.getExplain(), project.getCreatedDate());
