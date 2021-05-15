@@ -50,13 +50,22 @@ public class ProjectParticipantsService {
         return projectParticipantsRepository.findParticipantList(projectId);
     }
 
-    public ProjectParticipants addFavorite(ProjectParticipantsId participantsId){
+    public ProjectParticipants addFavorite(Member user, Long projectId){
+        final Project project = projectService.findById(projectId);
+        ProjectParticipantsId participantsId = new ProjectParticipantsId(project, user);
         final ProjectParticipants projectParticipants = getParticipants(participantsId);
 
         projectParticipants.addFavorite();
         projectParticipantsRepository.save(projectParticipants);
 
         return projectParticipants;
+    }
+
+    public void deleteFavorite(Member user, Long projectId) {
+        final Project project = projectService.findById(projectId);
+        ProjectParticipantsId participantsId = new ProjectParticipantsId(project, user);
+
+        projectParticipantsRepository.deleteById(participantsId);
     }
 
     public ProjectParticipants getParticipants(ProjectParticipantsId participantsId){

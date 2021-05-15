@@ -84,7 +84,7 @@ class ProjectParticipantsServiceTest {
         projectParticipantsRepository.flush();
 
         final ProjectParticipantsId projectParticipantsId = new ProjectParticipantsId(createdProject, member3);
-        projectParticipantsRepository.save(new ProjectParticipants(projectParticipantsId, ProjectParticipants.Role.MEMBER, false));
+        projectParticipantsRepository.save(new ProjectParticipants(projectParticipantsId, ProjectParticipants.Role.MEMBER, true));
         projectParticipantsRepository.flush();
     }
 
@@ -166,16 +166,13 @@ class ProjectParticipantsServiceTest {
     @Order(6)
     public void addFavorite() {
         // given
-        final Project project = projectRepository.findById(projectId).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 프로젝트입니다."));
         final Member member = memberRepository.findById("csytest1").orElseThrow(() -> new IllegalArgumentException("잘못된 정보입니다."));
-        final ProjectParticipantsId projectParticipantsId = new ProjectParticipantsId(project, member);
 
         // when
-        final ProjectParticipants projectParticipants = projectParticipantsService.addFavorite(projectParticipantsId);
+        final ProjectParticipants projectParticipants = projectParticipantsService.addFavorite(member, projectId);
 
         //then
-        final ProjectParticipants participants = projectParticipantsService.getParticipants(projectParticipantsId);
-        assertTrue(participants.isFavorites());
+        assertTrue(projectParticipants.isFavorites());
     }
 
     @Test
@@ -208,6 +205,19 @@ class ProjectParticipantsServiceTest {
     public void invite_project() {
         final ProjectInviteRequest inviteRequest = new ProjectInviteRequest(projectId, inviteeMemberId, "csytest1");
         projectParticipantsService.invite(inviteRequest);
+
+        // success
+    }
+
+    @Test
+    @DisplayName("즐겨찾기 제거")
+    @Order(10)
+    public void deleteFavorite() {
+        // given
+        final Member member = memberRepository.findById("csytest3").orElseThrow(() -> new IllegalArgumentException("잘못된 정보입니다."));
+
+        // when
+        projectParticipantsService.deleteFavorite(member, projectId);
 
         // success
     }
