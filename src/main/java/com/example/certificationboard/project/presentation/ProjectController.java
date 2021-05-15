@@ -9,10 +9,7 @@ import com.example.certificationboard.projectparticipants.domain.ProjectParticip
 import com.example.certificationboard.projectparticipants.domain.ProjectParticipantsId;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
@@ -58,6 +55,13 @@ public class ProjectController {
     @GetMapping(value = "/favorite")
     public ProjectPageResponse favoriteList(Pageable pageable, String userId) {
         return projectService.list(pageable, userId, true);
+    }
+
+    @GetMapping("/project/info/{projectId}")
+    public ProjectInfoResponse getProjectInfo(@PathVariable("projectId") Long projectId) {
+        final Project project = projectService.findById(projectId);
+
+        return new ProjectInfoResponse(project.getTitle(), project.getExplain(), project.getCreatedDate());
     }
 
 }
