@@ -64,8 +64,10 @@ public class ProjectParticipantsService {
     public void deleteFavorite(Member user, Long projectId) {
         final Project project = projectService.findById(projectId);
         ProjectParticipantsId participantsId = new ProjectParticipantsId(project, user);
+        final ProjectParticipants projectParticipants = getParticipants(participantsId);
 
-        projectParticipantsRepository.deleteById(participantsId);
+        projectParticipants.deleteFavorite();
+        projectParticipantsRepository.save(projectParticipants);
     }
 
     public ProjectParticipants getParticipants(ProjectParticipantsId participantsId){
