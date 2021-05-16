@@ -28,7 +28,7 @@ class ProjectParticipantsController (
 
     @DeleteMapping("/favorite")
     fun deleteFavorite(@AuthUser user: Member, @RequestBody request: FavoriteDto): ResponseEntity<String> {
-        projectParticipantsService.addFavorite(user, request.projectId)
+        projectParticipantsService.deleteFavorite(user, request.projectId)
 
         return ResponseEntity.ok()
             .body("success")
